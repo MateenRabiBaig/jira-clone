@@ -1,5 +1,5 @@
 import api from './axios';
-import { Task, TaskStatus } from '../types';
+import type { Task, TaskStatus } from '../types';
 
 export const taskApi = {
   getByProject: (projectId: string) => api.get<Task[]>(`/tasks/project/${projectId}`).then((r) => r.data),

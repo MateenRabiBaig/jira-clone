@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { taskApi } from '../../api/taskApi';
-import { Project } from '../../types';
+import type { Project } from '../../types';
 
 interface Props {
   projectId: string;

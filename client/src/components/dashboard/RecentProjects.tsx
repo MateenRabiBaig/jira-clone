@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { projectApi } from "../../api/projectApi";
-import { Project } from "../../types";
+import type { Project } from "../../types";
 
 export default function RecentProjects() {
     const [projects, setPrpjects] = useState<Project[]>([]);
