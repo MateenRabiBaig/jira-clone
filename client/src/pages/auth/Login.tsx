@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import api from '../../api/axios';
 import { useAppDispatch } from '../../hooks/reduxHooks';
-import { setCredentials } from '../../redux/slices/authSlice';
+import setCredentials from '../../redux/slices/authSlice';
 
 interface LoginForm {
   email: string;

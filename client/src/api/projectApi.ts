@@ -1,5 +1,5 @@
 import api from './axios';
-import { Project } from '../types';
+import type { Project } from '../types';
 
 export const projectApi = {
   getAll: () => api.get<Project[]>('/projects').then((r) => r.data),
