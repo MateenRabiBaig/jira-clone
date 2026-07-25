@@ -1,11 +1,11 @@
 const express = require('express')
-const { addComment, getCommentByTask } = require('../controllers/commentController')
-const { project } = require('../middleware/authMiddleware')
+const { addComment, getCommentsByTask } = require('../controllers/commentController')
+const { protect } = require('../middleware/authMiddleware')
 
 const router = express.Router()
 router.use(protect)
 
 router.post('/', addComment)
-router.post('/task/:taskId', getCommentByTask)
+router.post('/task/:taskId', getCommentsByTask)
 
 module.exports = router

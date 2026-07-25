@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import api from '../../api/axios';
 import { useAppDispatch } from '../../hooks/reduxHooks';
 import setCredentials from '../../redux/slices/authSlice';
+import { Link } from 'react-router-dom';
 
 interface LoginForm {
   email: string;
@@ -50,6 +51,10 @@ export default function Login() {
       >
         {isSubmitting ? 'Logging in...' : 'Log in'}
       </button>
+
+      <p className="text-sm text-center text-gray-500">Don't have an account?{' '}
+        <Link to="/register" className="text-indigo-600 font-medium">Sign up</Link>
+      </p>
     </form>
   );
 }
