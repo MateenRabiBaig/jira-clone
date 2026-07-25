@@ -6,6 +6,8 @@ import type { Project, Task } from '../../types';
 import Board from '../../components/board/Board';
 import CreateTaskModal from '../../components/tasks/CreateTaskModal';
 import TaskDetailModal from '../../components/tasks/TaskDetailModal';
+import FilterBar from '../../components/board/FilterBoard';
+
 export default function ProjectBoard() {
   const { id } = useParams<{ id: string }>();
   const [project, setProject] = useState<Project | null>(null);
@@ -13,6 +15,16 @@ export default function ProjectBoard() {
   const [loading, setLoading] = useState(true);
   const [showCreate, setShowCreate] = useState(false);
   const [activeTask, setActiveTask] = useState<Task | null>(null);
+  const [search, setSearch] = useState('');
+  const [priorityFilter, setPriorityFilter] = useState<TaskPriority | ''>('');
+  const [assigneeFilter, setAssigneeFilter] = useState('');
+
+  const filteredTasks = tasks.filter((t) => {
+    const matchesSearch = t.title.toLowerCase().includes(search.toLowerCase());
+    const matchesPriority = !priorityFilter || t.priority === priorityFilter;
+    const matchesAssignee = !assigneeFilter || t.assignee?.id === assigneeFilter;
+    return matchesSearch && matchesPriority && matchesAssignee;
+  });
 
   const load = async () => {
     if (!id) return;
@@ -38,6 +50,8 @@ export default function ProjectBoard() {
         </div>
         <button onClick={() => setShowCreate(true)} className="bg-indigo-600 text-white px-4 py-2 rounded">New Task</button>
       </div>
+
+      <FilterBar />
 
       <Board tasks={tasks} setTasks={setTasks} onTaskClick={setActiveTask} />
 

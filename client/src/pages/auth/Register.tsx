@@ -1,9 +1,91 @@
-function Register() {
-    return (
-        <div className="flex h-full items-center justify-center">
-            <h1 className="text-3xl font-bold">Register Page</h1>
-        </div>
-    );
+import { useForm } from "react-hook-form";
+import { Link, useNavigate } from "react-router-dom";
+import api from "../../api/axios";
+import { useAppDispatch } from "../../hooks/reduxHooks";
+import { setCredentials } from '../../redux/slices/authSlice';
+
+interface RegisterForm {
+    name: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
 }
 
-export default Register;
+export default function Register() {
+    const { register, handleSubmit, watch, formState: { errors, isSubmitting } } = useForm<RegisterForm>();
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+
+    const onSubmit = async (data: RegisterForm) => {
+        try {
+            const res = await api.post('/auth/register', {
+                name: data.name,
+                email: data.email,
+                password: data.password
+            })
+            dispatch(setCredentials(res.data))
+            navigate('/dashboard')
+        }
+        catch(err: any) {
+            alert(err.response?.data?.message ?? 'Registration Failed')
+        }
+    }
+
+    return (
+        <form onSubmit={handleSubmit(onSubmit)} className="max-w-sm mx-auto mt-20 space-y-4">
+            <h1 className="text-2xl font-bold">Create an account</h1>
+            
+            <div>
+                <input 
+                    {...register('name', { required: 'Name is required' })}
+                    placeholder="Full name"
+                    className="w-full border rounded px-3 py-2"
+                />
+                {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
+            </div>
+            
+            <div>
+                <input
+                    {...register('email', { required: 'Email is required', pattern: { value: /^\S+@\S+\.\S+$/, message: 'Enter a valid email' } })}
+                    placeholder="Email"
+                    className="w-full border rounded px-3 py-2"
+                />
+                {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
+            </div>
+            
+            <div>
+                <input
+                    type="password"
+                    {...register('password', { required: 'Password is required', minLength: { value: 6, message: 'Minimum 6 characters' } })}
+                    placeholder="Password"
+                    className="w-full border rounded px-3 py-2"
+                />
+                {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
+            </div>
+            
+            <div>
+                <input
+                    type="password"
+                    {...register('confirmPassword', { required: 'Please confirm your password', validate: (val) => val === watch('password') || 'Passwords do not match' })}
+                    placeholder="Confirm password"
+                    className="w-full border rounded px-3 py-2"
+                />
+                {errors.confirmPassword && (
+                    <p className="text-red-500 text-sm">{errors.confirmPassword.message}</p>
+                )}
+            </div>
+            
+            <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full bg-indigo-600 text-white rounded py-2 disabled:opacity-50"
+            >
+                {isSubmitting ? 'Creating account...' : 'Sign up'}
+            </button>
+            
+            <p className="text-sm text-center text-gray-500">Already have an account?{' '}
+                <Link to="/login" className="text-indigo-600 font-medium">Log in</Link>
+            </p>
+        </form>
+    )
+}
