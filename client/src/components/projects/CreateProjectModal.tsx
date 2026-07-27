@@ -1,9 +1,10 @@
 import { useForm } from "react-hook-form";
 import { projectApi } from "../../api/projectApi";
+import type { Project } from '../../types';
 
 interface Props {
     onClose: () => void;
-    onCreated: () => void;
+    onCreated: (project: Project) => void;
 }
 
 interface FormData {
@@ -15,8 +16,8 @@ export default function CreateProjectModal({ onClose, onCreated }: Props) {
     const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormData>();
 
     const onSubmit = async(data: FormData) => {
-        await projectApi.create(data)
-        onCreated()
+        const created = await projectApi.create(data)
+        onCreated(created)
         onClose()
     }
     

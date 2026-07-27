@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { DndContext, DragEndEvent } from '@dnd-kit/core';
+import { DndContext, type DragEndEvent } from '@dnd-kit/core';
 import Column from './Column';
 import type { Task, TaskStatus } from '../../types';
 import { taskApi } from '../../api/taskApi';

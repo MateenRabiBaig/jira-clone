@@ -37,3 +37,18 @@ export interface Comment {
     task: string;
     createdAt: string;
 }
+
+export interface DashboardStats {
+  projectsCount: number;
+  tasksCount: number;
+  completedCount: number;
+  pendingCount: number;
+}
+
+export interface RecentTaskItem {
+  _id: string;
+  title: string;
+  status: TaskStatus;
+  project: { _id: string; name: string };
+  assignee?: { name: string } | null;
+}

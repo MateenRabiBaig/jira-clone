@@ -1,4 +1,4 @@
-import { Project, TaskPriority } from '../../types';
+import type { Project, TaskPriority } from '../../types';
 
 interface Props {
     search: string;
@@ -37,7 +37,7 @@ export default function FilterBar ({ search, onSearchChange, priority, onPriorit
                 className="border rounded px-3 py-2 text-sm"
             >
                 <option value="">All Assignees</option>
-                {(members as any[]).map((m) => (
+                {(members as any[])?.map((m) => (
                     <option key={m._id ?? m} value={m._id ?? m}>{m.name ?? m}</option>
                 ))}
             </select>

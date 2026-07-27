@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import api from '../../api/axios';
 import { useAppDispatch } from '../../hooks/reduxHooks';
-import setCredentials from '../../redux/slices/authSlice';
+import { login } from '../../redux/slices/authSlice';
 import { Link } from 'react-router-dom';
 
 interface LoginForm {
@@ -18,7 +18,8 @@ export default function Login() {
   const onSubmit = async (data: LoginForm) => {
     try {
       const res = await api.post('/auth/login', data);
-      dispatch(setCredentials(res.data));
+      localStorage.setItem('token', res.data.token);
+      dispatch(login(res.data));
       navigate('/dashboard');
     }
     catch (err: any) {

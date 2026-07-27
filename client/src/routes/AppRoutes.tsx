@@ -9,6 +9,7 @@ import NotFound from "../pages/NotFound"
 import ProtectedRoute from "./ProtectedRoute"
 import AppLayout from "../layouts/AppLayout"
 import Tasks from "../pages/tasks/Tasks"
+import ProjectBoard from "../pages/projects/ProjectBoard"
 
 function AppRoutes() {
     return (
@@ -19,12 +20,14 @@ function AppRoutes() {
                 <Route path="/register" element={<Register />} />
 
                 <Route element={<ProtectedRoute />}>
-                    <Route element={<AppLayout />} />
-                    <Route path="/dashboard" element={<Dashboard />} />
-                    <Route path="/projects" element={<Projects />} />
-                    <Route path="/tasks" element={<Tasks />} />
-                    <Route path="/profile" element={<Profile />} />
-                    <Route path="/settings" element={<Settings />} />
+                    <Route element={<AppLayout />}>
+                        <Route path="/dashboard" element={<Dashboard />} />
+                        <Route path="/projects" element={<Projects />} />
+                        <Route path="/projects/:id" element={<ProjectBoard />} />
+                        <Route path="/tasks" element={<Tasks />} />
+                        <Route path="/profile" element={<Profile />} />
+                        <Route path="/settings" element={<Settings />} />
+                    </Route>
                 </Route>
 
                 <Route path="*" element={<NotFound />} />

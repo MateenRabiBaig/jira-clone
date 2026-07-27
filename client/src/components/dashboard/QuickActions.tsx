@@ -1,17 +1,47 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Plus } from "lucide-react";
+import CreateProjectModal from "../projects/CreateProjectModal";
+import QuickCreateTaskModal from "../tasks/QuickCreateTaskModal";
 
 function QuickActions() {
+    const [showNewProject, setShowNewProject] = useState(false);
+    const [showNewTask, setShowNewTask] = useState(false);
+    const navigate = useNavigate();
+
     return (
         <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
             <h3 className="mb-4 text-lg font-semibold text-slate-900">Quick Actions</h3>
 
             <div className="flex flex-wrap gap-3">
-                <button className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 transition">
+                <button
+                    onClick={() => setShowNewProject(true)}
+                    className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 transition"
+                >
                     <Plus size={18} />New Project
                 </button>
 
-                <button className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium hover:bg-slate-100 transition">New Task</button>
+                <button
+                    onClick={() => setShowNewTask(true)}
+                    className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium hover:bg-slate-100 transition"
+                >
+                    New Task
+                </button>
             </div>
+
+            {showNewProject && (
+                <CreateProjectModal
+                    onClose={() => setShowNewProject(false)}
+                    onCreated={(project) => navigate(`/projects/${project._id}`)}
+                />
+            )}
+
+            {showNewTask && (
+                <QuickCreateTaskModal
+                    onClose={() => setShowNewTask(false)}
+                    onCreated={(projectId) => navigate(`/projects/${projectId}`)}
+                />
+            )}
         </div>
     );
 }

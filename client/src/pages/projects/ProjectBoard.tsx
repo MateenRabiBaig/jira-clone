@@ -7,6 +7,8 @@ import Board from '../../components/board/Board';
 import CreateTaskModal from '../../components/tasks/CreateTaskModal';
 import TaskDetailModal from '../../components/tasks/TaskDetailModal';
 import FilterBar from '../../components/board/FilterBoard';
+import AddMemberModal from '../../components/projects/AddMemberModal';
+import { useAppSelector } from '../../hooks/reduxHooks';
 
 export default function ProjectBoard() {
   const { id } = useParams<{ id: string }>();
@@ -18,6 +20,9 @@ export default function ProjectBoard() {
   const [search, setSearch] = useState('');
   const [priorityFilter, setPriorityFilter] = useState<TaskPriority | ''>('');
   const [assigneeFilter, setAssigneeFilter] = useState('');
+  const [showAddMember, setShowAddMember] = useState(false);
+  const currentUser = useAppSelector((state) => state.auth.user);
+  const isOwner = currentUser?.id === (project?.owner as any)?._id;
 
   const filteredTasks = tasks.filter((t) => {
     const matchesSearch = t.title.toLowerCase().includes(search.toLowerCase());
@@ -47,8 +52,18 @@ export default function ProjectBoard() {
         <div>
           <h1 className="text-2xl font-bold">{project.name}</h1>
           <p className="text-gray-500 text-sm">{project.description}</p>
+          <p className="text-gray-400 text-xs mt-1">
+            {(project.members as any[]).length} member{(project.members as any[]).length !== 1 ? 's' : ''}
+          </p>
         </div>
         <button onClick={() => setShowCreate(true)} className="bg-indigo-600 text-white px-4 py-2 rounded">New Task</button>
+
+        <div className="flex gap-2">
+          {isOwner && (
+            <button onClick={() => setShowAddMember(true)} className="border px-4 py-2 rounded">+ Add Member</button>
+          )}
+          <button onClick={() => setShowCreate(true)} className="bg-indigo-600 text-white px-4 py-2 rounded">+ New Task</button>
+        </div>
       </div>
 
       <FilterBar />
@@ -69,6 +84,14 @@ export default function ProjectBoard() {
           task={activeTask}
           onClose={() => setActiveTask(null)}
           onUpdated={load}
+        />
+      )}
+
+      {showAddMember && (
+        <AddMemberModal
+          projectId={project._id}
+          onClose={() => setShowAddMember(false)}
+          onAdded={load}
         />
       )}
     </div>
