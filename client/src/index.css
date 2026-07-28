@@ -1,5 +1,21 @@
 @import "tailwindcss";
 
+@theme {
+  --color-jira-bg: #1F1F21;
+  --color-jira-surface: #1F1F21;
+  --color-jira-panel: #18191A;
+  --color-jira-card: #242528;
+  --color-jira-border: #E3E4F21F;
+  --color-jira-text: #A9ABAF;
+  --color-jira-textBright: #CECFD2;
+  --color-jira-muted: #96999E;
+  --color-jira-accent: #669DF1;
+  --color-jira-accentHover: #8FB8F6;
+  --color-jira-danger: #F15B50;
+  --color-jira-success: #4BCE97;
+  --color-jira-warning: #FBC828;
+}
+
 *,
 *::before,
 *::after {
