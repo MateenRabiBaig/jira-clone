@@ -4,6 +4,7 @@ import { projectApi } from '../../api/projectApi';
 import { taskApi } from '../../api/taskApi';
 import type { Project, Task } from '../../types';
 import Board from '../../components/board/Board';
+import BoardHeader from '../../components/board/BoardHeader';
 import CreateTaskModal from '../../components/tasks/CreateTaskModal';
 import TaskDetailModal from '../../components/tasks/TaskDetailModal';
 import FilterBar from '../../components/board/FilterBoard';
@@ -18,9 +19,10 @@ export default function ProjectBoard() {
   const [showCreate, setShowCreate] = useState(false);
   const [activeTask, setActiveTask] = useState<Task | null>(null);
   const [search, setSearch] = useState('');
-  const [priorityFilter, setPriorityFilter] = useState<TaskPriority | ''>('');
+  const [priorityFilter, setPriorityFilter] = useState<string>('');
   const [assigneeFilter, setAssigneeFilter] = useState('');
   const [showAddMember, setShowAddMember] = useState(false);
+  const [activeView, setActiveView] = useState('board');
   const currentUser = useAppSelector((state) => state.auth.user);
   const isOwner = currentUser?.id === (project?.owner as any)?._id;
 
@@ -34,41 +36,73 @@ export default function ProjectBoard() {
   const load = async () => {
     if (!id) return;
     setLoading(true);
-    const [proj, tsk] = await Promise.all([projectApi.getById(id), taskApi.getByProject(id)]);
-    setProject(proj);
-    setTasks(tsk);
-    setLoading(false);
+    try {
+      const [proj, tsk] = await Promise.all([
+        projectApi.getById(id),
+        taskApi.getByProject(id)
+      ]);
+      setProject(proj);
+      setTasks(tsk);
+    } catch (error) {
+      console.error('Failed to load project:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
     load();
   }, [id]);
 
-  if (loading || !project) return <div className="p-6">Loading board...</div>;
+  const handleTabChange = (tab: string) => {
+    setActiveView(tab);
+  };
+
+  if (loading || !project) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  const projectKey = project.name.slice(0, 3).toUpperCase();
 
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <h1 className="text-2xl font-bold">{project.name}</h1>
-          <p className="text-gray-500 text-sm">{project.description}</p>
-          <p className="text-gray-400 text-xs mt-1">
-            {(project.members as any[]).length} member{(project.members as any[]).length !== 1 ? 's' : ''}
-          </p>
+    <div className="flex flex-col h-screen">
+      <BoardHeader
+        projectName={project.name}
+        projectKey={projectKey}
+        onTabChange={handleTabChange}
+      />
+
+      <FilterBar
+        search={search}
+        onSearchChange={setSearch}
+        priority={priorityFilter as any}
+        onPriorityChange={setPriorityFilter}
+        assignee={assigneeFilter}
+        onAssigneeChange={setAssigneeFilter}
+        members={project.members}
+      />
+
+      {activeView === 'board' && (
+        <Board
+          tasks={filteredTasks}
+          setTasks={setTasks}
+          onTaskClick={(task) => setActiveTask(task)}
+        />
+      )}
+
+      {activeView === 'list' && (
+        <div className="bg-[#f4f5f7] p-4">
+          <div className="bg-white border border-[#dfe1e6] rounded">
+            <div className="p-4 text-sm text-[#6b7780]">
+              List view coming soon...
+            </div>
+          </div>
         </div>
-        <button onClick={() => setShowCreate(true)} className="bg-indigo-600 text-white px-4 py-2 rounded">New Task</button>
-
-        <div className="flex gap-2">
-          {isOwner && (
-            <button onClick={() => setShowAddMember(true)} className="border px-4 py-2 rounded">+ Add Member</button>
-          )}
-          <button onClick={() => setShowCreate(true)} className="bg-indigo-600 text-white px-4 py-2 rounded">+ New Task</button>
-        </div>
-      </div>
-
-      <FilterBar />
-
-      <Board tasks={tasks} setTasks={setTasks} onTaskClick={setActiveTask} />
+      )}
 
       {showCreate && (
         <CreateTaskModal
@@ -95,5 +129,5 @@ export default function ProjectBoard() {
         />
       )}
     </div>
-  )
+  );
 }

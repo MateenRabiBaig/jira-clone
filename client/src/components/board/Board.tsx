@@ -9,7 +9,7 @@ interface Props {
   onTaskClick: (task: Task) => void;
 }
 
-const STATUSES: TaskStatus[] = ['todo', 'in-progress', 'done'];
+const STATUSES: TaskStatus[] = ['todo', 'in-progress', 'in-review', 'done'];
 
 export default function Board({ tasks, setTasks, onTaskClick }: Props) {
   const handleDragEnd = async (event: DragEndEvent) => {
@@ -25,24 +25,26 @@ export default function Board({ tasks, setTasks, onTaskClick }: Props) {
 
     try {
       await taskApi.updateStatus(taskId, newStatus);
-    }
-    catch {
+    } catch {
       setTasks((prev) => prev.map((t) => (t._id === taskId ? { ...t, status: task.status } : t)));
     }
-  }
+  };
 
   return (
-    <DndContext onDragEnd={handleDragEnd}>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {STATUSES.map((status) => (
-          <Column
-            key={status}
-            status={status}
-            tasks={tasks.filter((t) => t.status === status)}
-            onTaskClick={onTaskClick}
-          />
-        ))}
-      </div>
-    </DndContext>
-  )
+    <div className="bg-[#f4f5f7] min-h-screen">
+      <DndContext onDragEnd={handleDragEnd}>
+        <div className="flex gap-4 px-4 py-4 overflow-x-auto">
+          {STATUSES.map((status) => (
+            <div key={status} className="flex-shrink-0 w-72">
+              <Column
+                status={status}
+                tasks={tasks.filter((t) => t.status === status)}
+                onTaskClick={onTaskClick}
+              />
+            </div>
+          ))}
+        </div>
+      </DndContext>
+    </div>
+  );
 }

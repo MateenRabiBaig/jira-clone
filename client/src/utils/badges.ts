@@ -5,7 +5,8 @@ export const priorityColors: Record<string, string> = {
 }
 
 export const statusLabels: Record<string, string> = {
-    todo: 'To Do',
-    'in-progress': 'In Progress',
-    done: 'Done'
+    todo: 'TO DO',
+    'in-progress': 'IN PROGRESS',
+    'in-review': 'IN REVIEW',
+    done: 'DONE'
 }
