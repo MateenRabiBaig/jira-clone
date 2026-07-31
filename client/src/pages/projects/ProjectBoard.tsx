@@ -24,7 +24,7 @@ export default function ProjectBoard() {
   const [showAddMember, setShowAddMember] = useState(false);
   const [activeView, setActiveView] = useState('board');
   const currentUser = useAppSelector((state) => state.auth.user);
-  const isOwner = currentUser?.id === (project?.owner as any)?._id;
+  const isOwner = currentUser?.id === (project?.owner as any)?.id;
 
   const filteredTasks = tasks.filter((t) => {
     const matchesSearch = t.title.toLowerCase().includes(search.toLowerCase());

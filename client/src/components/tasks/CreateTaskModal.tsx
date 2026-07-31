@@ -53,7 +53,7 @@ export default function CreateTaskModal({ projectId, members, onClose, onCreated
           <select {...register('assignee')} className="w-full border rounded px-3 py-2">
             <option value="">Unassigned</option>
             {(members as any[]).map((m) => (
-              <option key={m._id ?? m} value={m._id ?? m}>
+              <option key={m.id ?? m} value={m.id ?? m}>
                 {m.name ?? m}
               </option>
             ))}
