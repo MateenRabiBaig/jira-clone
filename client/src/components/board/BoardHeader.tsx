@@ -16,7 +16,6 @@ const viewTabs = [
 
 export default function BoardHeader({ projectName, projectKey, onTabChange }: BoardHeaderProps) {
   const [activeTab, setActiveTab] = useState("board");
-  const [showDropdown, setShowDropdown] = useState(false);
 
   const handleTabChange = (tabId: string) => {
     setActiveTab(tabId);
@@ -32,7 +31,7 @@ export default function BoardHeader({ projectName, projectKey, onTabChange }: Bo
           <span className="text-[#6b7780]">/</span>
         </div>
         <div className="flex items-center gap-2 hover:bg-[#ebecf0] px-2 py-1 rounded cursor-pointer relative group">
-          <span className="text-[#172b4d] font-medium">{projectName}</span>
+          <span className="text-[#172b4d] font-medium">{projectName} ({projectKey})</span>
         </div>
         <div className="flex items-center gap-2 text-[#6b7780]">
           <span className="text-[#6b7780]">/</span>

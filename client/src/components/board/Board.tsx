@@ -31,11 +31,11 @@ export default function Board({ tasks, setTasks, onTaskClick }: Props) {
   };
 
   return (
-    <div className="bg-[#f4f5f7] min-h-screen">
+    <div className="bg-[#1f2022] min-h-[calc(100vh-230px)]">
       <DndContext onDragEnd={handleDragEnd}>
-        <div className="flex gap-4 px-4 py-4 overflow-x-auto">
+        <div className="flex gap-3 px-4 pb-4 overflow-x-auto">
           {STATUSES.map((status) => (
-            <div key={status} className="flex-shrink-0 w-72">
+            <div key={status} className="flex-shrink-0 w-[280px]">
               <Column
                 status={status}
                 tasks={tasks.filter((t) => t.status === status)}

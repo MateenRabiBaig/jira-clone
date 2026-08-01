@@ -2,6 +2,7 @@ import { useState } from "react";
 import { userApi } from "../../api/userApi";
 import { projectApi } from "../../api/projectApi";
 import type { User } from "../../types";
+import axios from 'axios';
 
 interface Props {
     projectId: string;
@@ -26,8 +27,8 @@ export default function AddMemberModal({ projectId, onClose, onAdded }: Props) {
             const user = await userApi.searchByEmail(email.trim())
             setFoundUser(user)
         }
-        catch(err: any) {
-            setError(err.response?.data?.message ?? 'User not found')
+        catch(err: unknown) {
+            setError(axios.isAxiosError<{ message?: string }>(err) ? err.response?.data?.message ?? 'User not found' : 'User not found')
         }
         finally {
             setSearching(false)
@@ -43,8 +44,8 @@ export default function AddMemberModal({ projectId, onClose, onAdded }: Props) {
             onAdded()
             onClose()
         }
-        catch(err: any) {
-            setError(err.response?.data?.message ?? 'Failed to add member')
+        catch(err: unknown) {
+            setError(axios.isAxiosError<{ message?: string }>(err) ? err.response?.data?.message ?? 'Failed to add member' : 'Failed to add member')
         }
         finally {
             setAdding(false)

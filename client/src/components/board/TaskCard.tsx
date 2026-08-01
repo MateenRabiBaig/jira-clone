@@ -29,36 +29,36 @@ export default function TaskCard({ task, onClick }: Props) {
       {...listeners}
       {...attributes}
       onClick={onClick}
-      className="bg-white p-3 shadow-sm border border-[#dfe1e6] cursor-grab active:cursor-grabbing hover:shadow-md transition-shadow"
+      className="bg-[#242528] p-2 border border-[#303236] cursor-grab active:cursor-grabbing hover:border-[#55575c] transition-colors"
     >
       {/* Task Header with Icon and Priority */}
-      <div className="flex items-start justify-between gap-2 mb-2">
-        <div className="flex items-center gap-2">
-          <PriorityIcon priority={task.priority} size={16} />
+      <div className="flex items-start justify-between gap-1.5 mb-1.5">
+        <div className="flex items-center gap-1.5">
+          <PriorityIcon priority={task.priority} size={14} />
         </div>
       </div>
 
       {/* Task Title */}
-      <p className="text-sm text-[#172b4d] font-normal mb-2 line-clamp-3">{task.title}</p>
+      <p className="text-[13px] leading-5 text-[#d0d2d5] font-medium mb-2 line-clamp-3">{task.title}</p>
 
       {/* Task Key */}
-      <p className="text-xs text-[#6b7780] mb-2">{taskKey}</p>
+      <p className="text-[11px] text-[#96999e] mb-1.5">{taskKey}</p>
 
       {/* Task Footer */}
-      <div className="flex items-center justify-between gap-2">
+      <div className="flex items-center justify-between gap-1.5">
         {/* Left side icons */}
-        <div className="flex items-center gap-3 text-[#6b7780]">
+        <div className="flex items-center gap-2 text-[#96999e]">
           {/* Attachments indicator */}
-          <div className="flex items-center gap-1">
-            <Paperclip size={12} />
-            <span className="text-xs">1</span>
+          <div className="flex items-center gap-0.5">
+            <Paperclip size={11} />
+            <span className="text-[11px]">1</span>
           </div>
 
           {/* Due date */}
           {task.dueDate && (
-            <div className="flex items-center gap-1">
-              <Clock size={12} />
-              <span className="text-xs">
+            <div className="flex items-center gap-0.5">
+              <Clock size={11} />
+              <span className="text-[11px]">
                 {new Date(task.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
               </span>
             </div>
@@ -66,16 +66,16 @@ export default function TaskCard({ task, onClick }: Props) {
         </div>
 
         {/* Right side - Assignee */}
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-0.5">
           {task.assignee ? (
             <div
-              className="w-6 h-6 rounded bg-gradient-to-br from-blue-500 to-purple-600 text-white text-xs flex items-center justify-center font-medium"
+              className="w-5 h-5 rounded-full bg-[#5a50b5] text-white text-[10px] flex items-center justify-center font-medium"
               title={task.assignee.name}
             >
               {task.assignee.name.charAt(0).toUpperCase()}
             </div>
           ) : (
-            <div className="w-6 h-6 rounded-full border-2 border-dashed border-[#dfe1e6]"></div>
+            <div className="w-5 h-5 rounded-full border border-dashed border-[#626469]"></div>
           )}
         </div>
       </div>

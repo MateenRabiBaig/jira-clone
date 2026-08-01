@@ -4,12 +4,14 @@ export interface User {
     email: string;
 }
 
+export type ProjectMember = User | string;
+
 export interface Project {
     _id: string;
     name: string;
     description: string;
     owner: User | string;
-    members: User[] | string[];
+    members: ProjectMember[];
     createdAt: string;
     updatedAt: string; 
 }
@@ -28,12 +30,13 @@ export interface Task {
     assignee?: User | null;
     createdAt: string;
     updatedAt: string; 
+    ticketKey?: string;
 }
 
 export interface Comment {
     _id: string;
-    textarea: string;
-    author: string;
+    text: string;
+    author: User;
     task: string;
     createdAt: string;
 }

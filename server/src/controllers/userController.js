@@ -1,5 +1,4 @@
 const User = require('../models/User')
-const user = require('../models/User')
 
 const searchUserByEmail = async(req, res) => {
     try {

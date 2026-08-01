@@ -6,6 +6,6 @@ const router = express.Router()
 router.use(protect)
 
 router.post('/', addComment)
-router.post('/task/:taskId', getCommentsByTask)
+router.get('/task/:taskId', getCommentsByTask)
 
 module.exports = router

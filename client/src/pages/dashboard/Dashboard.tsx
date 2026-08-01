@@ -16,10 +16,10 @@ function Dashboard() {
     }, []);
 
     return (
-        <div className="space-y-8 p-8">
+        <div className="space-y-4 p-4">
             <WelcomeBanner />
 
-            <section className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+            <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
                 <StatCard
                     title="Projects"
                     value={stats ? String(stats.projectsCount) : "—"}
@@ -53,7 +53,7 @@ function Dashboard() {
                 <QuickActions />
             </section>
 
-            <section className="grid gap-6 lg:grid-cols-2">
+            <section className="grid gap-3 lg:grid-cols-2">
                 <RecentProjects />
                 <RecentTasks />
             </section>

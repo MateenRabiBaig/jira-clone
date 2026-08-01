@@ -4,6 +4,7 @@ import api from '../../api/axios';
 import { useAppDispatch } from '../../hooks/reduxHooks';
 import { login } from '../../redux/slices/authSlice';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 interface LoginForm {
   email: string;
@@ -22,8 +23,8 @@ export default function Login() {
       dispatch(login(res.data));
       navigate('/dashboard');
     }
-    catch (err: any) {
-      alert(err.response?.data?.message ?? 'Login failed');
+    catch (err: unknown) {
+      alert(axios.isAxiosError<{ message?: string }>(err) ? err.response?.data?.message ?? 'Login failed' : 'Login failed');
     }
   };
 

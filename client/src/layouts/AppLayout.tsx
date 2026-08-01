@@ -1,11 +1,13 @@
 import { Outlet } from "react-router-dom";
 import Sidebar from "../components/layout/Sidebar";
+import TopBar from "../components/layout/TopBar";
 
 function AppLayout() {
     return (
-        <div className="flex min-h-screen bg-slate-100">
+        <div className="min-h-screen bg-jira-bg text-jira-text">
+            <TopBar />
             <Sidebar />
-            <main className="flex-1 overflow-auto">
+            <main className="ml-[200px] pt-[52px] min-h-screen overflow-auto">
                 <Outlet />
             </main>
         </div>

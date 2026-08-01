@@ -5,4 +5,11 @@ export function getAvatarColor(name: string): string {
     return AVATAR_COLORS[sum % AVATAR_COLORS.length]
 }
 
-export 
+export function getAvatarInitials(name: string): string {
+    return name
+        .trim()
+        .split(/\s+/)
+        .slice(0, 2)
+        .map((part) => part[0]?.toUpperCase() ?? '')
+        .join('');
+}

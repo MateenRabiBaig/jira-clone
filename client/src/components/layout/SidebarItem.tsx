@@ -17,10 +17,10 @@ function SidebarItem({
     return (
         <NavLink
             to={to}
-            className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-3 transition-all duration-200
-            ${ isActive ? "bg-indigo-600 text-white" : "text-slate-300 hover:bg-slate-700 hover:text-white" }`}
+            className={({ isActive }) => `flex items-center gap-4 px-4 py-2.5 transition-colors
+            ${ isActive ? "bg-[#222e45] text-[#75a4f7]" : "text-[#b7b9bc] hover:bg-[#252629] hover:text-[#e1e3e5]" }`}
         >
-            <Icon size={20} />
+            <Icon size={19} />
             {!collapsed && (
                 <span className="text-sm font-medium">{label}</span>
             )}

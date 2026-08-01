@@ -24,7 +24,11 @@ export default function TaskDetailModal({ task, onClose, onUpdated }: Props) {
     }
 
     useEffect(() => {
-        loadComments()
+        // Comments are server state and need loading when the selected task changes.
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        void loadComments()
+        // loadComments is intentionally scoped to the selected task.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [task._id])
 
     const handlePostComment = async() => {

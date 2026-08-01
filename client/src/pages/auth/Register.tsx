@@ -2,7 +2,8 @@ import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../../api/axios";
 import { useAppDispatch } from "../../hooks/reduxHooks";
-import setCredentials from '../../redux/slices/authSlice';
+import { login } from '../../redux/slices/authSlice';
+import axios from 'axios';
 
 interface RegisterForm {
     name: string;
@@ -23,11 +24,12 @@ export default function Register() {
                 email: data.email,
                 password: data.password
             })
-            dispatch(setCredentials(res.data))
+            localStorage.setItem('token', res.data.token)
+            dispatch(login(res.data))
             navigate('/dashboard')
         }
-        catch(err: any) {
-            alert(err.response?.data?.message ?? 'Registration Failed')
+        catch(err: unknown) {
+            alert(axios.isAxiosError<{ message?: string }>(err) ? err.response?.data?.message ?? 'Registration Failed' : 'Registration Failed')
         }
     }
 

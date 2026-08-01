@@ -52,11 +52,13 @@ export default function CreateTaskModal({ projectId, members, onClose, onCreated
           </select>
           <select {...register('assignee')} className="w-full border rounded px-3 py-2">
             <option value="">Unassigned</option>
-            {(members as any[]).map((m) => (
-              <option key={m.id ?? m} value={m.id ?? m}>
-                {m.name ?? m}
+            {members.map((member) => {
+              const id = typeof member === 'string' ? member : member.id;
+              const name = typeof member === 'string' ? member : member.name;
+              return <option key={id} value={id}>
+                {name}
               </option>
-            ))}
+            })}
           </select>
           <input type="date" {...register('dueDate')} className="w-full border rounded px-3 py-2" />
           <div className="flex justify-end gap-2 pt-2">

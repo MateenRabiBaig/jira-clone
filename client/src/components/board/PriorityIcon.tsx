@@ -10,7 +10,7 @@ export default function PriorityIcon({ priority, size = 14 }: PriorityIconProps)
     return (
       <div className="flex items-center gap-0.5">
         <ChevronsUp size={size} className="text-red-600" />
-        <span className="text-xs text-red-600 font-medium">High</span>
+        <span className="text-[11px] text-red-600 font-medium">High</span>
       </div>
     );
   }
@@ -18,7 +18,7 @@ export default function PriorityIcon({ priority, size = 14 }: PriorityIconProps)
     return (
       <div className="flex items-center gap-0.5">
         <Equal size={size} className="text-yellow-600" />
-        <span className="text-xs text-yellow-600 font-medium">Medium</span>
+        <span className="text-[11px] text-yellow-600 font-medium">Medium</span>
       </div>
     );
   }
@@ -26,7 +26,7 @@ export default function PriorityIcon({ priority, size = 14 }: PriorityIconProps)
     return (
       <div className="flex items-center gap-0.5">
         <ChevronsDown size={size} className="text-blue-500" />
-        <span className="text-xs text-blue-500 font-medium">Low</span>
+        <span className="text-[11px] text-blue-500 font-medium">Low</span>
       </div>
     );
   }

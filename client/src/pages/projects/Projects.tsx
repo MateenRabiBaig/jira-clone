@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { projectApi } from "../../api/projectApi";
 import type { Project } from "../../types";
 import CreateProjectModal from "../../components/projects/CreateProjectModal";
+import axios from 'axios';
 
 export default function Projects() {
     const [projects, setProjects] = useState<Project[]>([]);
@@ -17,8 +18,8 @@ export default function Projects() {
             setProjects(data)
             setError(null)
         }
-        catch(err: any) {
-            setError(err.response?.data?.message ?? 'Failed to load projects');
+        catch(err: unknown) {
+            setError(axios.isAxiosError<{ message?: string }>(err) ? err.response?.data?.message ?? 'Failed to load projects' : 'Failed to load projects');
         }
         finally {
             setLoading(false)
@@ -26,28 +27,30 @@ export default function Projects() {
     }
 
     useEffect(() => {
+        // Fetch the current server state when this page mounts.
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchProjects();
     },[]);
 
-    if(loading) return <div className="p-6">Loading projects...</div>
-    if(error) return <div className="p-6 text-red-500">{error}</div>
+    if(loading) return <div className="p-8 text-[#96999e]">Loading projects...</div>
+    if(error) return <div className="p-8 text-red-400">{error}</div>
 
     return (
-        <div className="p-6">
+        <div className="min-h-[calc(100vh-68px)] bg-[#1f2022] p-8">
             <div className="flex justify-between items-center mb-6">
-                <h1 className="text-2xl font-bold">Projects</h1>
-                <button onClick={()=>setShowModal(true)} className="bg-indigo-600 text-white px-4 py-2 rounded flex items-center gap-2">New Project</button>
+                <h1 className="text-2xl font-bold text-[#e0e1e3]">Projects</h1>
+                <button onClick={()=>setShowModal(true)} className="bg-[#6f9deb] text-[#101214] px-4 py-2 font-semibold flex items-center gap-2">New Project</button>
             </div>
 
         {projects.length === 0 ? (
-            <div className="text-center text-gray-500 py-20 bg-white rounded-xl">No projects yet — create your first one</div>
+            <div className="text-center text-[#96999e] py-20 bg-[#171819] border border-[#36373a]">No projects yet — create your first one</div>
         ) : (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {projects.map((p) => (
-                    <Link key={p._id} to={`/projects/${p._id}`} className="bg-white rounded-xl p-5 shadow-sm hover:shadow-md transition">
-                        <h3 className="font-semibold text-lg">{p.name}</h3>
-                        <p className="text-gray-500 text-sm mt-1 line-clamp-2">{p.description}</p>
-                        <p className="text-gray-400 text-xs mt-3">{(p.members as any[]).length} members</p>
+                    <Link key={p._id} to={`/projects/${p._id}`} className="bg-[#242528] border border-[#36373a] p-5 hover:border-[#6f9deb] transition">
+                        <h3 className="font-semibold text-lg text-[#e0e1e3]">{p.name}</h3>
+                        <p className="text-[#96999e] text-sm mt-1 line-clamp-2">{p.description}</p>
+                        <p className="text-[#85878a] text-xs mt-3">{p.members.length} members</p>
                     </Link>
                 ))}
             </div>

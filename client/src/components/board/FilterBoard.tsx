@@ -1,4 +1,4 @@
-import { Search, Filter, User, Flag, Calendar, ArrowUpDown, Plus } from "lucide-react";
+import { Search, Filter, Calendar, ArrowUpDown, Plus } from "lucide-react";
 import type { Project, TaskPriority } from '../../types';
 
 interface Props {
@@ -10,15 +10,6 @@ interface Props {
     onAssigneeChange: (v: string) => void;
     members: Project['members'];
 }
-
-const priorityOptions = [
-  { value: '', label: 'All priorities' },
-  { value: 'high', label: 'Highest', color: 'text-red-600' },
-  { value: 'high', label: 'High', color: 'text-orange-500' },
-  { value: 'medium', label: 'Medium', color: 'text-yellow-600' },
-  { value: 'low', label: 'Low', color: 'text-blue-500' },
-  { value: 'low', label: 'Lowest', color: 'text-gray-500' },
-];
 
 export default function FilterBar({
   search,
@@ -50,10 +41,14 @@ export default function FilterBar({
             <span>Filter</span>
           </button>
 
-          <button className="flex items-center gap-2 px-3 py-2 text-sm text-[#172b4d] bg-white border border-[#dfe1e6] rounded hover:bg-[#ebecf0]">
-            <User size={16} />
-            <span>Assignee</span>
-          </button>
+          <select value={assignee} onChange={(e) => onAssigneeChange(e.target.value)} className="px-3 py-2 text-sm text-[#172b4d] bg-white border border-[#dfe1e6] rounded">
+            <option value="">All assignees</option>
+            {members.map((member) => {
+              const id = typeof member === 'string' ? member : member.id;
+              const name = typeof member === 'string' ? member : member.name;
+              return <option key={id} value={id}>{name}</option>;
+            })}
+          </select>
 
           <select
             value={priority}
