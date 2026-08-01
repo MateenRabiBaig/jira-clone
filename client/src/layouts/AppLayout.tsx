@@ -9,7 +9,7 @@ function AppLayout() {
         <div className="min-h-screen bg-jira-bg text-jira-text">
             <TopBar />
             <Sidebar />
-            <main className={`${collapsed ? 'ml-[80px]' : 'ml-[300px]'} pl-3 pt-[55px] min-h-screen overflow-auto transition-[margin] duration-300`}>
+            <main className={`${collapsed ? 'ml-0' : 'ml-[290px]'} pl-3 pt-[55px] min-h-screen overflow-auto transition-[margin] duration-300`}>
                 <Outlet />
             </main>
         </div>

@@ -18,25 +18,22 @@ export default function TopBar() {
             <div className="w-[180px] flex items-center gap-3 shrink-0">
                 <button onClick={() => dispatch(toggleSidebar())} aria-label="Toggle sidebar" className="text-[#a9abad] hover:text-white"><PanelLeft size={18} /></button>
                 <Grid3x3 size={17} className="text-[#a9abad]" />
-                <div className="w-7 h-7 bg-[#2563eb] flex items-center justify-center rounded-md">
-                    <span className="text-white font-bold text-base">J</span>
-                </div>
+                <img src="/favicon.svg" alt="Jira" className="w-7 h-7 object-contain" />
                 <span className="font-semibold text-[#d7d9db] text-sm">Jira</span>
             </div>
 
             <div className="flex-1 flex items-center justify-center gap-2 min-w-0">
-                <div className="flex items-center gap-2 bg-[#292a2d] border border-[#45464a] rounded-md px-2.5 h-8 w-full max-w-[800px]">
+                <div className="flex items-center gap-2 bg-[#292a2d] border border-[#45464a] rounded-md px-2.5 h-8 w-full max-w-[560px]">
                     <Search size={16} className="text-[#9b9da1] shrink-0" />
                     <input placeholder="Search" className="bg-transparent text-sm outline-none w-full placeholder:text-[#9b9da1] text-jira-textBright" />
                     <SlidersHorizontal size={15} className="text-[#9b9da1]" />
                 </div>
-                <button onClick={() => setShowCreate(true)} className="flex items-center gap-1.5 bg-[#6f9deb] text-[#101214] text-sm font-semibold px-4 h-8 rounded-md hover:bg-[#87adf0] whitespace-nowrap">
+                <button onClick={() => setShowCreate(true)} className="flex items-center gap-1.5 bg-[#6f9deb] text-[#101214] text-sm px-4 h-8 rounded-md hover:bg-[#87adf0] whitespace-nowrap">
                     <Plus size={18} />Create
                 </button>
             </div>
 
             <div className="w-[260px] flex items-center justify-end gap-3 min-w-0">
-                <div className="bg-[#242529] px-2 py-1 rounded-md text-[#d7d9db] font-semibold text-xs">◆ Ask Rovo</div>
                 <Bell size={17} className="text-[#b7b9bc]" />
                 <HelpCircle size={17} className="text-[#b7b9bc]" />
                 <Settings size={17} className="text-[#b7b9bc]" />

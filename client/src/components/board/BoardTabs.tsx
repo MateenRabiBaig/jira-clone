@@ -28,7 +28,7 @@ export default function BoardTabs({ activeTab, onTabChange }: Props) {
                 const isActive = isEnabled && activeTab === key;
 
                 return (
-                        <button key={tab.id} disabled={!isEnabled} onClick={() => isEnabled && onTabChange(key) } className={`py-2 text-xs whitespace-nowrap transition border-b-2 ${isActive ? 'text-[#75a4f7] border-[#75a4f7] font-medium' : isEnabled ? 'text-[#b7b9bc] border-transparent hover:text-[#e0e1e3]' : 'text-[#85878a] border-transparent cursor-default'}`}>
+                        <button key={tab.id} disabled={!isEnabled} onClick={() => isEnabled && onTabChange(key) } className={`py-2 text-sm whitespace-nowrap transition border-b-2 ${isActive ? 'text-[#75a4f7] border-[#75a4f7] font-medium' : isEnabled ? 'text-[#b7b9bc] border-transparent hover:text-[#e0e1e3]' : 'text-[#85878a] border-transparent cursor-default'}`}>
                         {tab.label}
                     </button>
                 )

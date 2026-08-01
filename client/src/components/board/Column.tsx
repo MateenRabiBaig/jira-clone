@@ -35,7 +35,7 @@ export default function Column({ status, tasks, onTaskClick }: Props) {
       {/* Column Body */}
       <div
         ref={setNodeRef}
-        className={`flex-1 px-1.5 py-1.5 min-h-[400px] transition-colors bg-[#171819] ${
+        className={`flex-1 px-1.5 py-1.5 min-h-[550px] transition-colors bg-[#171819] ${
           isOver ? 'bg-[#202b3c]' : ''
         }`}
       >

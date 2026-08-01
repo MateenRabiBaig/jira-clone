@@ -10,7 +10,6 @@ import BoardTabs from '../../components/board/BoardTabs';
 import BoardToolbar from '../../components/board/BoardToolbar';
 import SummaryView from '../../components/board/SummaryView';
 import ListView from '../../components/board/ListView';
-import QuickCreateTaskModal from '../../components/tasks/QuickCreateTaskModal';
 import TaskDetailModal from '../../components/tasks/TaskDetailModal';
 import AddMemberModal from '../../components/projects/AddMemberModal';
 
@@ -22,7 +21,6 @@ export default function ProjectBoard() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<TabKey>('board');
-  const [showCreate, setShowCreate] = useState(false);
   const [showAddMember, setShowAddMember] = useState(false);
   const [activeTask, setActiveTask] = useState<Task | null>(null);
   const [search, setSearch] = useState('');
@@ -63,21 +61,9 @@ export default function ProjectBoard() {
   });
 
   return (
-    <div className="min-h-[calc(100vh-52px)] bg-[#1f2022]">
-      <SpaceHeader name={project.name} onAddMember={() => setShowAddMember(true)} />
+    <div className="min-h-[calc(100vh-52px)] max-w-[1700px] mx-auto bg-[#1f2022]">
+      <SpaceHeader name={project.name} canAddMember={isOwner} onAddMember={() => setShowAddMember(true)} />
       <BoardTabs activeTab={activeTab} onTabChange={setActiveTab} />
-
-      <div className="flex justify-between items-center px-8 py-2">
-        <p className="text-[#96999e] text-sm">
-          {project.members.length} member{project.members.length !== 1 ? 's' : ''}
-        </p>
-        <button
-          onClick={() => setShowCreate(true)}
-          className="bg-[#6f9deb] text-[#101214] px-4 py-2 text-sm font-semibold hover:bg-[#87adf0]"
-        >
-          + New Task
-        </button>
-      </div>
 
       {activeTab === 'summary' && <SummaryView project={project} tasks={tasks} />}
 
@@ -99,13 +85,6 @@ export default function ProjectBoard() {
             <ListView tasks={filteredTasks} onTaskClick={setActiveTask} />
           )}
         </>
-      )}
-
-      {showCreate && (
-        <QuickCreateTaskModal
-          onClose={() => setShowCreate(false)}
-          onCreated={() => { setShowCreate(false); void load(); }}
-        />
       )}
 
       {activeTask && (

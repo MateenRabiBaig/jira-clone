@@ -1,5 +1,6 @@
 import { BarChart3, Filter, ListFilter, Search, SlidersHorizontal, UserRound } from 'lucide-react';
 import type { Project, TaskPriority } from '../../types';
+import Avatar from '../common/Avatar';
 
 interface Props {
   search: string;
@@ -18,7 +19,25 @@ export default function BoardToolbar({ search, onSearchChange, priority, onPrior
         <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-jira-muted" />
         <input value={search} onChange={(event) => onSearchChange(event.target.value)} placeholder="Search board" className="w-full bg-[#1c1d1f] border border-[#6e7075] px-9 py-1.5 text-[13px] text-jira-textBright placeholder:text-[#96999e] focus:outline-none focus:border-[#75a4f7]" />
       </div>
-      <div className="flex items-center -space-x-1 mr-2"><div className="w-8 h-8 rounded-full bg-[#5a50b5] border-2 border-[#75a4f7] flex items-center justify-center text-[11px]">MB</div><div className="w-8 h-8 rounded-full bg-[#277d9c] border-2 border-[#1c1d1f] flex items-center justify-center text-[11px]">AC</div><div className="w-8 h-8 rounded-full bg-[#39486c] border-2 border-[#1c1d1f] flex items-center justify-center text-[11px]">DR</div><div className="w-8 h-8 rounded-full bg-[#278ca2] border-2 border-[#1c1d1f] flex items-center justify-center text-[11px]">SK</div></div>
+      <div className="flex items-center -space-x-1 mr-2">
+        {members.map((member) => {
+          const id = typeof member === 'string' ? member : member.id;
+          const name = typeof member === 'string' ? member : member.name;
+          const selected = assignee === id;
+          return (
+            <button
+              key={id}
+              type="button"
+              title={selected ? `Clear ${name} filter` : `Show tasks assigned to ${name}`}
+              aria-pressed={selected}
+              onClick={() => onAssigneeChange(selected ? '' : id)}
+              className={`rounded-full border-2 transition-transform hover:z-10 hover:scale-110 ${selected ? 'border-[#75a4f7] ring-2 ring-[#75a4f7]/40 z-10' : 'border-[#1c1d1f]'}`}
+            >
+              <Avatar name={name} size={28} />
+            </button>
+          );
+        })}
+      </div>
       <select value={priority} onChange={(event) => onPriorityChange(event.target.value as TaskPriority | '')} className="bg-[#1c1d1f] border border-[#45464a] px-3 py-1.5 text-xs text-[#d0d2d5]">
         <option value="">All priorities</option>
         <option value="high">High</option>
