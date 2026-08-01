@@ -7,7 +7,7 @@ function AppLayout() {
         <div className="min-h-screen bg-jira-bg text-jira-text">
             <TopBar />
             <Sidebar />
-            <main className="ml-[200px] pt-[52px] min-h-screen overflow-auto">
+            <main className="ml-[232px] pl-3 pt-[52px] min-h-screen overflow-auto">
                 <Outlet />
             </main>
         </div>

@@ -23,21 +23,21 @@ function RecentTasks() {
     }, []);
 
     return (
-        <div className="rounded-lg border border-slate-200 bg-white p-3 shadow-sm">
-            <h2 className="text-sm font-semibold text-slate-900">Recent Tasks</h2>
-            <p className="text-xs text-slate-500 mb-2">Latest task updates</p>
+        <div className="border border-[#36373a] bg-[#242528] p-3">
+            <h2 className="text-sm font-semibold text-[#e0e1e3]">Recent Tasks</h2>
+            <p className="text-xs text-[#96999e] mb-2">Latest task updates</p>
 
-            {tasks.length === 0 && <p className="text-xs text-slate-400">No tasks yet.</p>}
+            {tasks.length === 0 && <p className="text-xs text-[#85878a]">No tasks yet.</p>}
 
             {tasks.map((task) => (
                 <Link
                     key={task._id}
                     to={`/projects/${task.project._id}`}
-                    className="flex items-center justify-between py-2 border-b last:border-0 hover:bg-slate-50 -mx-2 px-2 rounded transition"
+                    className="flex items-center justify-between py-2 border-b border-[#36373a] last:border-0 hover:bg-[#303236] -mx-2 px-2 transition"
                 >
                     <div>
-                        <p className="text-xs font-medium text-slate-800">{task.title}</p>
-                        <p className="text-[11px] text-slate-400">{task.project.name}</p>
+                        <p className="text-xs font-medium text-[#d0d2d5]">{task.title}</p>
+                        <p className="text-[11px] text-[#85878a]">{task.project.name}</p>
                     </div>
                     <span className={`text-[11px] px-2 py-0.5 rounded-full font-medium ${statusStyles[task.status]}`}>
                         {statusLabels[task.status]}

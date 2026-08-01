@@ -6,7 +6,7 @@ function Sidebar() {
     const collapsed = useAppSelector((state) => state.sidebar.collapsed);
 
     return (
-        <aside className={`fixed left-0 top-[68px] bottom-0 z-40 bg-[#1c1d1f] border-r border-[#36373a] text-white transition-all duration-300 ${collapsed ? "w-20" : "w-[232px]"}`}>
+        <aside className={`fixed left-0 top-[52px] bottom-0 z-40 bg-[#1c1d1f] border-r border-[#36373a] text-white transition-all duration-300 ${collapsed ? "w-20" : "w-[232px]"}`}>
             <nav className="h-full overflow-y-auto py-4">
                 <div className="px-4 mb-2 text-[12px] uppercase tracking-wider text-[#85878a]">Workspace</div>
                 <SidebarItem to="/dashboard" label="For you" icon={Home} collapsed={collapsed} />
