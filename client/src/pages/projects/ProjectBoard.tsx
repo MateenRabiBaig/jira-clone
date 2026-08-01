@@ -10,7 +10,7 @@ import BoardTabs from '../../components/board/BoardTabs';
 import BoardToolbar from '../../components/board/BoardToolbar';
 import SummaryView from '../../components/board/SummaryView';
 import ListView from '../../components/board/ListView';
-import CreateTaskModal from '../../components/tasks/CreateTaskModal';
+import QuickCreateTaskModal from '../../components/tasks/QuickCreateTaskModal';
 import TaskDetailModal from '../../components/tasks/TaskDetailModal';
 import AddMemberModal from '../../components/projects/AddMemberModal';
 
@@ -102,11 +102,9 @@ export default function ProjectBoard() {
       )}
 
       {showCreate && (
-        <CreateTaskModal
-          projectId={project._id}
-          members={project.members}
+        <QuickCreateTaskModal
           onClose={() => setShowCreate(false)}
-          onCreated={load}
+          onCreated={() => { setShowCreate(false); void load(); }}
         />
       )}
 

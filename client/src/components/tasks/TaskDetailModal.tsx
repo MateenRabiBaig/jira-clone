@@ -57,11 +57,15 @@ export default function TaskDetailModal({ task, onClose, onUpdated }: Props) {
                 
                 <p className="text-[#96999e] text-sm mb-4">{task.description || 'No description'}</p>
                 
-                <div className="flex gap-4 text-sm text-[#96999e] mb-5">
+                <div className="grid grid-cols-2 gap-3 text-sm text-[#96999e] mb-5">
+                    {task.workType && <span>Work type: <strong className="text-[#d0d2d5]">{task.workType}</strong></span>}
                     <span>Priority: <strong>{task.priority}</strong></span>
                     <span>Status: <strong>{task.status}</strong></span>
+                    {task.reporter && <span>Reporter: <strong>{typeof task.reporter === 'string' ? task.reporter : task.reporter.name}</strong></span>}
+                    {task.assignee && <span>Assignee: <strong>{task.assignee.name}</strong></span>}
                     {task.dueDate && <span>Due: <strong>{new Date(task.dueDate).toLocaleDateString()}</strong></span>}
                 </div>
+                {task.attachments && task.attachments.length > 0 && <div className="mb-5"><h3 className="font-semibold text-[#d0d2d5] mb-2">Attachments</h3><p className="text-sm text-[#96999e]">{task.attachments.join(', ')}</p></div>}
                 
                 <h3 className="font-semibold mb-2">Comments</h3>
                 {loading ? (

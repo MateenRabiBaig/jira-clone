@@ -18,6 +18,7 @@ export interface Project {
 
 export type TaskStatus = 'todo' | 'in-progress' | 'in-review' | 'done';
 export type TaskPriority = 'low' | 'medium' | 'high';
+export type TaskWorkType = 'task' | 'story' | 'bug';
 
 export interface Task {
     _id: string;
@@ -25,6 +26,9 @@ export interface Task {
     description?: string;
     status: TaskStatus;
     priority: TaskPriority;
+    workType?: TaskWorkType;
+    reporter?: User | string | null;
+    attachments?: string[];
     dueDate: string;
     project: string;
     assignee?: User | null;

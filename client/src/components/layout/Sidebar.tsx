@@ -6,12 +6,12 @@ function Sidebar() {
     const collapsed = useAppSelector((state) => state.sidebar.collapsed);
 
     return (
-        <aside className={`fixed left-0 top-[52px] bottom-0 z-40 bg-[#1c1d1f] border-r border-[#36373a] text-white transition-all duration-300 ${collapsed ? "w-20" : "w-[232px]"}`}>
+        <aside className={`fixed left-0 top-[55px] bottom-0 z-40 bg-[#1c1d1f] border-r border-[#36373a] text-white transition-all duration-300 ${collapsed ? "w-20" : "w-[300px]"}`}>
             <nav className="h-full overflow-y-auto py-4">
                 <div className="px-4 mb-2 text-[12px] uppercase tracking-wider text-[#85878a]">Workspace</div>
                 <SidebarItem to="/dashboard" label="For you" icon={Home} collapsed={collapsed} />
-                <SidebarItem to="/projects" label="Spaces" icon={Workflow} collapsed={collapsed} />
                 <SidebarItem to="/tasks" label="Recent" icon={CalendarDays} collapsed={collapsed} />
+                <SidebarItem to="/projects" label="Spaces" icon={Workflow} collapsed={collapsed} />
                 <div className="mt-6 px-4 flex items-center justify-between text-[12px] uppercase tracking-wider text-[#85878a]"><span>Spaces</span><Plus size={16} /></div>
                 <div className="mt-2 px-3">
                     <div className="flex items-center gap-3 px-3 py-2 bg-[#252629] text-[#d7d9db] text-sm"><div className="w-5 h-5 bg-[#42a5f5] flex items-center justify-center text-[11px]">✣</div> Platform-app <ChevronRight size={15} className="ml-auto text-[#85878a]" /></div>

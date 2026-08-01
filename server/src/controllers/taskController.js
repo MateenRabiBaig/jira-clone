@@ -2,11 +2,11 @@ const Task = require('../models/Task');
 
 const createTask = async (req, res) => {
   try {
-    const { title, description, priority, dueDate, project, assignee } = req.body;
+    const { title, description, priority, dueDate, project, assignee, workType, reporter, attachments } = req.body;
     if (!title || !project) return res.status(400).json({ message: 'Title and project are required' });
 
-    const task = await Task.create({ title, description, priority, dueDate, project, assignee });
-    const populated = await task.populate('assignee', 'name email');
+    const task = await Task.create({ title, description, priority, dueDate, project, assignee, workType, reporter: reporter || req.user._id, attachments });
+    const populated = await task.populate([{ path: 'assignee', select: 'name email' }, { path: 'reporter', select: 'name email' }]);
     res.status(201).json(populated);
   }
   catch(err) {
@@ -18,6 +18,7 @@ const getTasksByProject = async (req, res) => {
   try {
     const tasks = await Task.find({ project: req.params.projectId })
       .populate('assignee', 'name email')
+      .populate('reporter', 'name email')
       .sort({ createdAt: -1 });
     res.json(tasks);
   }
@@ -29,7 +30,8 @@ const getTasksByProject = async (req, res) => {
 const updateTask = async (req, res) => {
   try {
     const task = await Task.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
-      .populate('assignee', 'name email');
+      .populate('assignee', 'name email')
+      .populate('reporter', 'name email');
     if (!task) return res.status(404).json({ message: 'Task not found' });
     res.json(task);
   }
@@ -42,7 +44,8 @@ const updateTaskStatus = async (req, res) => {
   try {
     const { status } = req.body;
     const task = await Task.findByIdAndUpdate(req.params.id, { status }, { new: true })
-      .populate('assignee', 'name email');
+      .populate('assignee', 'name email')
+      .populate('reporter', 'name email');
     if (!task) return res.status(404).json({ message: 'Task not found' });
     res.json(task);
   }
