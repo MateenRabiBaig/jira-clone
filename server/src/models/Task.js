@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const taskSchema = new mongoose.Schema(
   {
     title: { type: String, required: true, trim: true },
+    ticketKey: { type: String, unique: true, sparse: true },
     description: { type: String, trim: true },
     status: { type: String, enum: ['todo', 'in-progress', 'in-review', 'done'], default: 'todo' },
     priority: { type: String, enum: ['low', 'medium', 'high'], default: 'medium' },

@@ -10,6 +10,7 @@ import BoardTabs from '../../components/board/BoardTabs';
 import BoardToolbar from '../../components/board/BoardToolbar';
 import SummaryView from '../../components/board/SummaryView';
 import ListView from '../../components/board/ListView';
+import QuickCreateTaskModal from '../../components/tasks/QuickCreateTaskModal';
 import TaskDetailModal from '../../components/tasks/TaskDetailModal';
 import AddMemberModal from '../../components/projects/AddMemberModal';
 
@@ -23,6 +24,7 @@ export default function ProjectBoard() {
   const [activeTab, setActiveTab] = useState<TabKey>('board');
   const [showAddMember, setShowAddMember] = useState(false);
   const [activeTask, setActiveTask] = useState<Task | null>(null);
+  const [showCreate, setShowCreate] = useState(false);
   const [search, setSearch] = useState('');
   const [priorityFilter, setPriorityFilter] = useState<TaskPriority | ''>('');
   const [assigneeFilter, setAssigneeFilter] = useState('');
@@ -80,7 +82,7 @@ export default function ProjectBoard() {
           />
 
           {activeTab === 'board' ? (
-            <Board tasks={filteredTasks} setTasks={setTasks} onTaskClick={setActiveTask} />
+            <Board tasks={filteredTasks} setTasks={setTasks} onTaskClick={setActiveTask} onCreateTask={() => setShowCreate(true)} />
           ) : (
             <ListView tasks={filteredTasks} onTaskClick={setActiveTask} />
           )}
@@ -88,7 +90,14 @@ export default function ProjectBoard() {
       )}
 
       {activeTask && (
-        <TaskDetailModal task={activeTask} onClose={() => setActiveTask(null)} onUpdated={load} />
+        <TaskDetailModal task={activeTask} onClose={() => setActiveTask(null)} />
+      )}
+
+      {showCreate && (
+        <QuickCreateTaskModal
+          onClose={() => setShowCreate(false)}
+          onCreated={() => { setShowCreate(false); void load(); }}
+        />
       )}
 
       {showAddMember && isOwner && (

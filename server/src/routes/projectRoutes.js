@@ -1,6 +1,6 @@
 const express = require('express');
 const {
-  createProject, getMyProjects, getProjectById, updateProject, deleteProject, addMember,
+  createProject, getMyProjects, getProjectById, addMember,
 } = require('../controllers/projectController');
 const { protect } = require('../middleware/authMiddleware');
 
@@ -11,8 +11,6 @@ router.use(protect);
 router.post('/', createProject);
 router.get('/', getMyProjects);
 router.get('/:id', getProjectById);
-router.put('/:id', updateProject);
-router.delete('/:id', deleteProject);
 router.post('/:id/members', addMember);
 
 module.exports = router

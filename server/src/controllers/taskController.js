@@ -6,6 +6,8 @@ const createTask = async (req, res) => {
     if (!title || !project) return res.status(400).json({ message: 'Title and project are required' });
 
     const task = await Task.create({ title, description, priority, dueDate, project, assignee, workType, reporter: reporter || req.user._id, attachments });
+    task.ticketKey = `KAN-${task._id.toString().slice(-4).toUpperCase()}`;
+    await task.save();
     const populated = await task.populate([{ path: 'assignee', select: 'name email' }, { path: 'reporter', select: 'name email' }]);
     res.status(201).json(populated);
   }
@@ -27,19 +29,6 @@ const getTasksByProject = async (req, res) => {
   }
 }
 
-const updateTask = async (req, res) => {
-  try {
-    const task = await Task.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
-      .populate('assignee', 'name email')
-      .populate('reporter', 'name email');
-    if (!task) return res.status(404).json({ message: 'Task not found' });
-    res.json(task);
-  }
-  catch(err) {
-    res.status(500).json({ message: err.message });
-  }
-}
-
 const updateTaskStatus = async (req, res) => {
   try {
     const { status } = req.body;
@@ -54,15 +43,4 @@ const updateTaskStatus = async (req, res) => {
   }
 }
 
-const deleteTask = async (req, res) => {
-  try {
-    const task = await Task.findByIdAndDelete(req.params.id);
-    if (!task) return res.status(404).json({ message: 'Task not found' });
-    res.json({ message: 'Task deleted' });
-  }
-  catch(err) {
-    res.status(500).json({ message: err.message });
-  }
-}
-
-module.exports = { createTask, getTasksByProject, updateTask, updateTaskStatus, deleteTask }
+module.exports = { createTask, getTasksByProject, updateTaskStatus }

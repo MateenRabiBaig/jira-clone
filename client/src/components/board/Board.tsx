@@ -7,11 +7,12 @@ interface Props {
   tasks: Task[];
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
   onTaskClick: (task: Task) => void;
+  onCreateTask: () => void;
 }
 
 const STATUSES: TaskStatus[] = ['todo', 'in-progress', 'in-review', 'done'];
 
-export default function Board({ tasks, setTasks, onTaskClick }: Props) {
+export default function Board({ tasks, setTasks, onTaskClick, onCreateTask }: Props) {
   const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
     if (!over) return;
@@ -40,6 +41,7 @@ export default function Board({ tasks, setTasks, onTaskClick }: Props) {
                 status={status}
                 tasks={tasks.filter((t) => t.status === status)}
                 onTaskClick={onTaskClick}
+                onCreateTask={onCreateTask}
               />
             </div>
           ))}

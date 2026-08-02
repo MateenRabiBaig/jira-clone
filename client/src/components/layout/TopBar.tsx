@@ -18,7 +18,7 @@ export default function TopBar() {
             <div className="w-[180px] flex items-center gap-3 shrink-0">
                 <button onClick={() => dispatch(toggleSidebar())} aria-label="Toggle sidebar" className="text-[#a9abad] hover:text-white"><PanelLeft size={18} /></button>
                 <Grid3x3 size={17} className="text-[#a9abad]" />
-                <img src="/favicon.svg" alt="Jira" className="w-7 h-7 object-contain" />
+                <img src="/jira.png" alt="Jira" className="w-7 h-7 object-contain rounded-md" />
                 <span className="font-semibold text-[#d7d9db] text-sm">Jira</span>
             </div>
 

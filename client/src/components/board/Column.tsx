@@ -8,9 +8,10 @@ interface Props {
   status: TaskStatus;
   tasks: Task[];
   onTaskClick: (task: Task) => void;
+  onCreateTask: () => void;
 }
 
-export default function Column({ status, tasks, onTaskClick }: Props) {
+export default function Column({ status, tasks, onTaskClick, onCreateTask }: Props) {
   const { setNodeRef, isOver } = useDroppable({ id: status });
 
   return (
@@ -46,7 +47,7 @@ export default function Column({ status, tasks, onTaskClick }: Props) {
         </div>
 
         {/* Add Task Button */}
-        <button className="flex items-center gap-1.5 px-2 py-1.5 text-xs text-[#96999e] hover:bg-[#252629] mt-1 w-full transition-colors">
+        <button onClick={onCreateTask} className="flex items-center gap-1.5 px-2 py-1.5 text-xs text-[#96999e] hover:bg-[#252629] mt-1 w-full transition-colors">
           <Plus size={14} />
           <span>Create issue</span>
         </button>

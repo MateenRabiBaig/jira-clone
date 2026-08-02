@@ -19,8 +19,7 @@ export default function TaskCard({ task, onClick }: Props) {
     opacity: isDragging ? 0.5 : 1,
   };
 
-  // Generate task key from project name
-  const taskKey = `KAN-${task._id.slice(-4)}`;
+  const taskKey = task.ticketKey ?? 'Issue';
 
   return (
     <div
@@ -29,7 +28,7 @@ export default function TaskCard({ task, onClick }: Props) {
       {...listeners}
       {...attributes}
       onClick={onClick}
-      className="bg-[#242528] p-2 border border-[#303236] cursor-grab active:cursor-grabbing hover:border-[#55575c] transition-colors"
+      className="bg-[#242528] p-2 border border-[#303236] cursor-grab active:cursor-grabbing hover:border-[#55575c] transition-colors rounded-sm"
     >
       {/* Task Header with Icon and Priority */}
       <div className="flex items-start justify-between gap-1.5 mb-1.5">
@@ -51,7 +50,7 @@ export default function TaskCard({ task, onClick }: Props) {
           {/* Attachments indicator */}
           <div className="flex items-center gap-0.5">
             <Paperclip size={11} />
-            <span className="text-[11px]">1</span>
+            {task.attachments && task.attachments.length > 0 && <span className="text-[11px]">{task.attachments.length}</span>}
           </div>
 
           {/* Due date */}
