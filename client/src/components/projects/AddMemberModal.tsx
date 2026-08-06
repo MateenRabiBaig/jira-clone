@@ -1,16 +1,17 @@
 import { useState } from "react";
 import { userApi } from "../../api/userApi";
 import { projectApi } from "../../api/projectApi";
-import type { User } from "../../types";
+import type { Project, User } from "../../types";
 import axios from 'axios';
 
 interface Props {
     projectId: string;
+    members: Project['members'];
     onClose: () => void;
-    onAdded: () => void;
+    onAdded: () => void | Promise<void>;
 }
 
-export default function AddMemberModal({ projectId, onClose, onAdded }: Props) {
+export default function AddMemberModal({ projectId, members, onClose, onAdded }: Props) {
     const [email, setEmail] = useState('')
     const [foundUser, setFoundUser] = useState<User | null>(null)
     const [error, setError] = useState('')
@@ -37,11 +38,16 @@ export default function AddMemberModal({ projectId, onClose, onAdded }: Props) {
 
     const handleAdd = async() => {
         if(!foundUser) return
+        const alreadyMember = members.some((member) => (typeof member === 'string' ? member : member.id) === foundUser.id)
+        if (alreadyMember) {
+            setError('This user is already a project member')
+            return
+        }
         setAdding(true)
 
         try {
             await projectApi.addMember(projectId, foundUser.id)
-            onAdded()
+            await onAdded()
             onClose()
         }
         catch(err: unknown) {

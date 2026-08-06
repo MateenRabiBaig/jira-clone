@@ -101,7 +101,7 @@ export default function ProjectBoard() {
       )}
 
       {showAddMember && isOwner && (
-        <AddMemberModal projectId={project._id} onClose={() => setShowAddMember(false)} onAdded={load} />
+        <AddMemberModal projectId={project._id} members={project.members} onClose={() => setShowAddMember(false)} onAdded={load} />
       )}
     </div>
   );
