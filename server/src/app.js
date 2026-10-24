@@ -24,8 +24,21 @@ const corsOptions = {
   allowedHeaders: ['Content-Type', 'Authorization'],
 }
 
+app.use((req, res, next) => {
+  if (req.method !== 'OPTIONS') return next()
+
+  const origin = req.get('Origin')
+  if (!origin || !allowedOrigins.has(normalizeOrigin(origin))) return next()
+
+  res.setHeader('Access-Control-Allow-Origin', origin)
+  res.setHeader('Access-Control-Allow-Credentials', 'true')
+  res.setHeader('Access-Control-Allow-Methods', corsOptions.methods.join(', '))
+  res.setHeader('Access-Control-Allow-Headers', corsOptions.allowedHeaders.join(', '))
+  res.setHeader('Vary', 'Origin')
+  return res.sendStatus(204)
+})
+
 app.use(cors(corsOptions))
-app.options(/.*/, cors(corsOptions))
 app.use(express.json())
 app.use('/api/auth', authRoutes)
 app.use('/api/projects', projectRoutes)
