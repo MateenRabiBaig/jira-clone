@@ -52,7 +52,7 @@ app.use('/api/comments', commentRoutes)
 app.use('/api/users', userRoutes)
 app.use('/api/dashboard', dashboardRoutes)
 
-app.use('/api/health', (req, res) => res.json({ status: 'ok' }))
+app.use('/api/health', (req, res) => res.json({ status: 'ok', build: 'ecf375a' }))
 app.use((req, res) => res.status(404).json({ message: 'Route not found' }))
 
 module.exports = app
