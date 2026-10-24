@@ -12,11 +12,16 @@ const app = express()
 const normalizeOrigin = (origin) => origin.trim().replace(/\/$/, '')
 const configuredClient = normalizeOrigin(process.env.CLIENT_URL || 'http://localhost:5173')
 const allowedOrigins = new Set([configuredClient, 'http://localhost:5173', 'http://127.0.0.1:5173', 'http://localhost:4173', 'http://127.0.0.1:4173'])
+const isAllowedOrigin = (origin) => {
+  const normalizedOrigin = normalizeOrigin(origin)
+  const isLocalOrigin = /^https?:\/\/(localhost|127\.0\.0\.1):\d+$/.test(normalizedOrigin)
+  return isLocalOrigin || allowedOrigins.has(normalizedOrigin)
+}
 
 const corsOptions = {
   origin: (origin, callback) => {
     // Allow non-browser requests and the local Vite/preview origins.
-    if (!origin || allowedOrigins.has(normalizeOrigin(origin))) return callback(null, true)
+    if (!origin || isAllowedOrigin(origin)) return callback(null, true)
     return callback(new Error('Origin not allowed by CORS'))
   },
   credentials: true,
@@ -28,7 +33,7 @@ app.use((req, res, next) => {
   if (req.method !== 'OPTIONS') return next()
 
   const origin = req.get('Origin')
-  if (!origin || !allowedOrigins.has(normalizeOrigin(origin))) return next()
+  if (!origin || !isAllowedOrigin(origin)) return next()
 
   res.setHeader('Access-Control-Allow-Origin', origin)
   res.setHeader('Access-Control-Allow-Credentials', 'true')
