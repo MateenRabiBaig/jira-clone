@@ -9,19 +9,23 @@ const dashboardRoutes = require('./routes/dashboardRoutes')
 
 const app = express()
 
-const configuredClient = process.env.CLIENT_URL || 'http://localhost:5173'
+const normalizeOrigin = (origin) => origin.trim().replace(/\/$/, '')
+const configuredClient = normalizeOrigin(process.env.CLIENT_URL || 'http://localhost:5173')
 const allowedOrigins = new Set([configuredClient, 'http://localhost:5173', 'http://127.0.0.1:5173', 'http://localhost:4173', 'http://127.0.0.1:4173'])
 
-app.use(cors({
+const corsOptions = {
   origin: (origin, callback) => {
     // Allow non-browser requests and the local Vite/preview origins.
-    if (!origin || allowedOrigins.has(origin)) return callback(null, true)
+    if (!origin || allowedOrigins.has(normalizeOrigin(origin))) return callback(null, true)
     return callback(new Error('Origin not allowed by CORS'))
   },
   credentials: true,
   methods: ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-}))
+}
+
+app.use(cors(corsOptions))
+app.options(/.*/, cors(corsOptions))
 app.use(express.json())
 app.use('/api/auth', authRoutes)
 app.use('/api/projects', projectRoutes)
