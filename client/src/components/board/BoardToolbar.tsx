@@ -1,64 +1,92 @@
-import { BarChart3, Filter, ListFilter, Search, SlidersHorizontal, UserRound } from 'lucide-react';
-import type { Project, TaskPriority } from '../../types';
+import { Search, X } from 'lucide-react';
+import type { Project, TaskPriority, TaskWorkType } from '../../types';
 import Avatar from '../common/Avatar';
+import { priorityLabels, workTypeLabels } from '../../utils/badges';
+import { resolveUsers } from '../../utils/userRefs';
 
 interface Props {
   search: string;
   onSearchChange: (value: string) => void;
   priority: TaskPriority | '';
   onPriorityChange: (value: TaskPriority | '') => void;
+  type: TaskWorkType | '';
+  onTypeChange: (value: TaskWorkType | '') => void;
   assignee: string;
   onAssigneeChange: (value: string) => void;
   members: Project['members'];
 }
 
-export default function BoardToolbar({ search, onSearchChange, priority, onPriorityChange, assignee, onAssigneeChange, members }: Props) {
+export default function BoardToolbar({
+  search, onSearchChange, priority, onPriorityChange, type, onTypeChange, assignee, onAssigneeChange, members,
+}: Props) {
+  const resolvedMembers = resolveUsers(members);
+  const hasFilters = Boolean(search || priority || type || assignee);
+
+  const clearFilters = () => {
+    onSearchChange('');
+    onPriorityChange('');
+    onTypeChange('');
+    onAssigneeChange('');
+  };
+
   return (
     <div className="flex flex-wrap items-center gap-2 px-4 py-2">
-      <div className="relative w-[240px]">
+      <div className="relative w-[220px]">
         <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-jira-muted" />
-        <input value={search} onChange={(event) => onSearchChange(event.target.value)} placeholder="Search board" className="w-full bg-[#1c1d1f] border border-[#6e7075] px-9 py-1.5 text-[13px] text-jira-textBright placeholder:text-[#96999e] focus:outline-none focus:border-[#75a4f7]" />
+        <input value={search} onChange={(event) => onSearchChange(event.target.value)} placeholder="Search board" aria-label="Search board" className="w-full bg-[#1c1d1f] border border-[#6e7075] px-9 py-1.5 text-[13px] text-jira-textBright placeholder:text-[#96999e] focus:outline-none focus:border-[#75a4f7]" />
       </div>
       <div className="flex items-center -space-x-1 mr-2">
-        {members.map((member) => {
-          const id = typeof member === 'string' ? member : member.id;
-          const name = typeof member === 'string' ? member : member.name;
-          const selected = assignee === id;
+        {resolvedMembers.map((member) => {
+          const selected = assignee === member.id;
           return (
             <button
-              key={id}
+              key={member.id}
               type="button"
-              title={selected ? `Clear ${name} filter` : `Show tasks assigned to ${name}`}
+              title={selected ? `Clear ${member.name} filter` : `Show tasks assigned to ${member.name}`}
               aria-pressed={selected}
-              onClick={() => onAssigneeChange(selected ? '' : id)}
+              onClick={() => onAssigneeChange(selected ? '' : member.id)}
               className={`rounded-full border-2 transition-transform hover:z-10 hover:scale-110 ${selected ? 'border-[#75a4f7] ring-2 ring-[#75a4f7]/40 z-10' : 'border-[#1c1d1f]'}`}
             >
-              <Avatar name={name} size={28} />
+              <Avatar name={member.name} src={member.avatarUrl} size={28} />
             </button>
           );
         })}
       </div>
-      <select value={priority} onChange={(event) => onPriorityChange(event.target.value as TaskPriority | '')} className="bg-[#1c1d1f] border border-[#45464a] px-3 py-1.5 text-xs text-[#d0d2d5]">
-        <option value="">All priorities</option>
-        <option value="high">High</option>
-        <option value="medium">Medium</option>
-        <option value="low">Low</option>
-      </select>
-      <label className="relative">
-        <UserRound size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-jira-muted" />
-        <select value={assignee} onChange={(event) => onAssigneeChange(event.target.value)} className="bg-[#1c1d1f] border border-[#45464a] pl-9 pr-3 py-1.5 text-xs text-[#d0d2d5]">
-          <option value="">All assignees</option>
-          {members.map((member) => {
-            const id = typeof member === 'string' ? member : member.id;
-            const name = typeof member === 'string' ? member : member.name;
-            return <option key={id} value={id}>{name}</option>;
-          })}
+      <label>
+        <span className="sr-only">Filter by type</span>
+        <select value={type} onChange={(event) => onTypeChange(event.target.value as TaskWorkType | '')} className="bg-[#1c1d1f] border border-[#45464a] px-3 py-1.5 text-xs text-[#d0d2d5]">
+          <option value="">All types</option>
+          {(Object.keys(workTypeLabels) as TaskWorkType[]).map((t) => (
+            <option key={t} value={t}>{workTypeLabels[t]}</option>
+          ))}
         </select>
       </label>
-      <button className="flex items-center gap-2 border border-[#45464a] px-3 py-1.5 text-xs text-[#d0d2d5]"><Filter size={14} /> Type</button>
-      <button className="flex items-center gap-2 border border-[#45464a] px-3 py-1.5 text-xs text-[#d0d2d5]"><ListFilter size={14} /> More</button>
-      <button className="text-[#b7b9bc] text-xs ml-1">Clear filters</button>
-      <div className="ml-auto flex items-center gap-2"><button className="border border-[#45464a] px-3 py-1.5 text-[#d0d2d5] text-xs">Group</button><button className="p-1.5 border border-[#45464a] text-[#b7b9bc]"><BarChart3 size={15} /></button><button className="p-1.5 border border-[#45464a] text-[#b7b9bc]"><SlidersHorizontal size={15} /></button></div>
+      <label>
+        <span className="sr-only">Filter by priority</span>
+        <select value={priority} onChange={(event) => onPriorityChange(event.target.value as TaskPriority | '')} className="bg-[#1c1d1f] border border-[#45464a] px-3 py-1.5 text-xs text-[#d0d2d5]">
+          <option value="">All priorities</option>
+          {(Object.keys(priorityLabels) as TaskPriority[]).map((p) => (
+            <option key={p} value={p}>{priorityLabels[p]}</option>
+          ))}
+        </select>
+      </label>
+      <label className="relative">
+        <span className="sr-only">Filter by assignee</span>
+        <select value={assignee} onChange={(event) => onAssigneeChange(event.target.value)} className="bg-[#1c1d1f] border border-[#45464a] pl-3 pr-3 py-1.5 text-xs text-[#d0d2d5]">
+          <option value="">All assignees</option>
+          {resolvedMembers.map((member) => (
+            <option key={member.id} value={member.id}>{member.name}</option>
+          ))}
+        </select>
+      </label>
+      <button
+        onClick={clearFilters}
+        disabled={!hasFilters}
+        className={`flex items-center gap-1.5 text-xs px-2.5 py-1.5 ${hasFilters ? 'text-[#75a4f7] hover:underline' : 'text-[#55575c] cursor-default'}`}
+      >
+        <X size={13} /> Clear filters
+      </button>
+      {hasFilters && <span className="text-[11px] text-[#85878a]">Filters active</span>}
     </div>
   );
 }

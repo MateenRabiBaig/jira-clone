@@ -19,15 +19,16 @@ export default function Board({ tasks, setTasks, onTaskClick, onCreateTask }: Pr
 
     const taskId = active.id as string;
     const newStatus = over.id as TaskStatus;
-    const task = tasks.find((t) => t._id === taskId);
+    const task = tasks.find((t) => t.id === taskId);
     if (!task || task.status === newStatus) return;
 
-    setTasks((prev) => prev.map((t) => (t._id === taskId ? { ...t, status: newStatus } : t)));
+    setTasks((prev) => prev.map((t) => (t.id === taskId ? { ...t, status: newStatus } : t)));
 
     try {
-      await taskApi.updateStatus(taskId, newStatus);
+      const updated = await taskApi.updateStatus(taskId, newStatus);
+      setTasks((prev) => prev.map((t) => (t.id === taskId ? updated : t)));
     } catch {
-      setTasks((prev) => prev.map((t) => (t._id === taskId ? { ...t, status: task.status } : t)));
+      setTasks((prev) => prev.map((t) => (t.id === taskId ? { ...t, status: task.status } : t)));
     }
   };
 

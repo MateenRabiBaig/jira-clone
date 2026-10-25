@@ -1,13 +1,23 @@
 const express = require('express')
 const cors = require('cors')
+const helmet = require('helmet')
 const authRoutes = require('./routes/authRoutes')
 const projectRoutes = require('./routes/projectRoutes')
 const taskRoutes = require('./routes/taskRoutes')
 const commentRoutes = require('./routes/commentRoutes')
 const userRoutes = require('./routes/userRoutes')
 const dashboardRoutes = require('./routes/dashboardRoutes')
+const teamRoutes = require('./routes/teamRoutes')
+const notificationRoutes = require('./routes/notificationRoutes')
+const attachmentRoutes = require('./routes/attachmentRoutes')
+const searchRoutes = require('./routes/searchRoutes')
+const { notFoundHandler, errorHandler } = require('./middleware/errorHandler')
+const requestLogger = require('./middleware/requestLogger')
 
 const app = express()
+
+app.disable('x-powered-by')
+app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }))
 
 const normalizeOrigin = (origin) => origin.trim().replace(/\/$/, '')
 const configuredClient = normalizeOrigin(process.env.CLIENT_URL || 'http://localhost:5173')
@@ -44,15 +54,22 @@ app.use((req, res, next) => {
 })
 
 app.use(cors(corsOptions))
-app.use(express.json())
+app.use(express.json({ limit: '1mb' }))
+app.use(requestLogger)
+
 app.use('/api/auth', authRoutes)
 app.use('/api/projects', projectRoutes)
 app.use('/api/tasks', taskRoutes)
 app.use('/api/comments', commentRoutes)
 app.use('/api/users', userRoutes)
 app.use('/api/dashboard', dashboardRoutes)
+app.use('/api/teams', teamRoutes)
+app.use('/api/notifications', notificationRoutes)
+app.use('/api/attachments', attachmentRoutes)
+app.use('/api/search', searchRoutes)
 
-app.use('/api/health', (req, res) => res.json({ status: 'ok', build: 'ecf375a' }))
-app.use((req, res) => res.status(404).json({ message: 'Route not found' }))
+app.use('/api/health', (_req, res) => res.json({ status: 'ok' }))
+app.use(notFoundHandler)
+app.use(errorHandler)
 
 module.exports = app

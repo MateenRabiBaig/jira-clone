@@ -1,0 +1,19 @@
+# Render blueprint for the backend.
+# Deploy with: Render Dashboard -> New -> Blueprint -> select this repository.
+services:
+  - type: web
+    name: jira-clone-api
+    runtime: node
+    rootDir: server
+    buildCommand: npm install
+    startCommand: node server.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: MONGO_URI
+        sync: false # set in the Render dashboard - never commit secrets
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: CLIENT_URL
+        sync: false # set to your Vercel frontend origin

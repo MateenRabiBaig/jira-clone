@@ -1,28 +1,135 @@
-import { CalendarDays, ChevronRight, Home, LayoutDashboard, Plus, Search, Settings, Users, Workflow } from "lucide-react";
-import { useAppSelector } from "../../hooks/reduxHooks";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { CalendarDays, FolderKanban, Home, Plus, Settings, Users } from "lucide-react";
+import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
+import { closeSidebar } from "../../redux/slices/sidebarSlice";
+import { projectApi } from "../../api/projectApi";
+import { teamApi } from "../../api/teamApi";
+import type { Project, Team } from "../../types";
 import SidebarItem from "./SidebarItem";
 
+const MAX_SIDEBAR_PROJECTS = 4;
+const MAX_SIDEBAR_TEAMS = 3;
+
+/**
+ * The app sidebar. On desktop it is a fixed column that collapses to an
+ * icon rail; on mobile (< md) it becomes an overlay drawer with backdrop.
+ */
 function Sidebar() {
     const collapsed = useAppSelector((state) => state.sidebar.collapsed);
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+    const [projects, setProjects] = useState<Project[]>([]);
+    const [teams, setTeams] = useState<Team[]>([]);
+
+    useEffect(() => {
+        let cancelled = false;
+        // Keep the quick-access lists fresh; failures are non-fatal here.
+        projectApi.getAll().then((data) => !cancelled && setProjects(data)).catch(() => undefined);
+        teamApi.getAll().then((data) => !cancelled && setTeams(data)).catch(() => undefined);
+        return () => {
+            cancelled = true;
+        };
+    }, []);
+
+    const handleNavigate = () => {
+        // On small screens the sidebar is a drawer - close it after navigating.
+        if (window.innerWidth < 768) dispatch(closeSidebar());
+    };
 
     return (
-        <aside className={`fixed left-0 top-[55px] bottom-0 z-40 bg-[#1c1d1f] border-r border-[#36373a] text-white transition-all duration-300 ${collapsed ? "hidden" : "w-[300px]"}`}>
-            <nav className="h-full overflow-y-auto py-4">
-                {!collapsed && <div className="px-4 mb-2 text-[12px] uppercase tracking-wider text-[#85878a]">Workspace</div>}
-                <SidebarItem to="/dashboard" label="For you" icon={Home} collapsed={collapsed} />
-                <SidebarItem to="/tasks" label="Recent" icon={CalendarDays} collapsed={collapsed} />
-                <SidebarItem to="/projects" label="Spaces" icon={Workflow} collapsed={collapsed} />
-                {!collapsed && <div className="mt-6 px-4 flex items-center justify-between text-[12px] uppercase tracking-wider text-[#85878a]"><span>Spaces</span><Plus size={16} /></div>}
-                <div className={collapsed ? "mt-5 px-2" : "mt-2 px-3"}>
-                    <div className={`flex items-center gap-3 py-2 bg-[#252629] text-[#d7d9db] text-sm ${collapsed ? "justify-center px-1" : "px-3"}`}><div className="w-5 h-5 bg-[#42a5f5] flex items-center justify-center text-[11px]">✣</div>{!collapsed && <>Platform-app <ChevronRight size={15} className="ml-auto text-[#85878a]" /></>}</div>
-                    <div className="ml-3 border-l border-[#45464a] pl-3 mt-1"><SidebarItem to="/projects" label="PA board" icon={LayoutDashboard} collapsed={collapsed} /></div>
-                </div>
-                {!collapsed && <div className="mt-6 px-4 flex items-center justify-between text-[12px] uppercase tracking-wider text-[#85878a]"><span>Navigation</span><Search size={15} /></div>}
-                <SidebarItem to="/profile" label="Teams" icon={Users} collapsed={collapsed} />
-                <SidebarItem to="/settings" label="Settings" icon={Settings} collapsed={collapsed} />
-                {!collapsed && <><div className="mt-8 mx-4 border-t border-[#36373a] pt-4 text-[#85878a] text-xs">Recommended</div><div className="mx-4 mt-3 bg-[#242528] p-4 text-[#d7d9db]"><div className="text-sm font-semibold">Unlock your AI teammate</div><p className="text-xs text-[#96999e] mt-2 leading-5">Rovo connects your tools and knowledge so work gets done for you.</p><span className="block text-[#75a4f7] text-xs mt-3">Try Rovo now</span></div></>}
-            </nav>
-        </aside>
+        <>
+            {/* Backdrop for the mobile drawer */}
+            {!collapsed && (
+                <div
+                    className="fixed inset-0 top-[55px] bg-black/50 z-30 md:hidden"
+                    aria-hidden="true"
+                    onClick={() => dispatch(closeSidebar())}
+                />
+            )}
+
+            <aside
+                aria-label="Sidebar navigation"
+                className={`fixed left-0 top-[55px] bottom-0 z-40 bg-[#1c1d1f] border-r border-[#36373a] text-white transition-all duration-300 overflow-hidden
+                    ${collapsed ? "w-[56px] -translate-x-full md:translate-x-0" : "w-[260px] translate-x-0"}`}
+            >
+                <nav className="h-full overflow-y-auto overflow-x-hidden py-4 px-2">
+                    <div className="space-y-0.5">
+                        <SidebarItem to="/dashboard" label="For you" icon={Home} collapsed={collapsed} onNavigate={handleNavigate} />
+                        <SidebarItem to="/tasks" label="My Tasks" icon={CalendarDays} collapsed={collapsed} onNavigate={handleNavigate} />
+                        <SidebarItem to="/projects" label="Projects" icon={FolderKanban} collapsed={collapsed} onNavigate={handleNavigate} />
+                        <SidebarItem to="/teams" label="Teams" icon={Users} collapsed={collapsed} onNavigate={handleNavigate} />
+                        <SidebarItem to="/settings" label="Settings" icon={Settings} collapsed={collapsed} onNavigate={handleNavigate} />
+                    </div>
+
+                    {!collapsed && projects.length > 0 && (
+                        <SidebarSection
+                            title="Recent projects"
+                            action={{ to: "/projects", label: "View all" }}
+                        >
+                            {projects.slice(0, MAX_SIDEBAR_PROJECTS).map((project) => (
+                                <SidebarItem
+                                    key={project.id}
+                                    to={`/projects/${project.id}`}
+                                    label={project.name}
+                                    icon={FolderKanban}
+                                    collapsed={false}
+                                    onNavigate={handleNavigate}
+                                />
+                            ))}
+                        </SidebarSection>
+                    )}
+
+                    {!collapsed && teams.length > 0 && (
+                        <SidebarSection title="Your teams" action={{ to: "/teams", label: "View all" }}>
+                            {teams.slice(0, MAX_SIDEBAR_TEAMS).map((team) => (
+                                <SidebarItem
+                                    key={team.id}
+                                    to={`/teams/${team.id}`}
+                                    label={team.name}
+                                    icon={Users}
+                                    collapsed={false}
+                                    onNavigate={handleNavigate}
+                                />
+                            ))}
+                        </SidebarSection>
+                    )}
+
+                    {!collapsed && (
+                        <button
+                            onClick={() => { handleNavigate(); navigate('/teams?new=1'); }}
+                            className="mt-2 flex items-center gap-2 px-4 py-2 w-full text-left text-xs text-[#85878a] hover:text-[#b7b9bc] hover:bg-[#252629] rounded transition-colors"
+                        >
+                            <Plus size={14} /> New team
+                        </button>
+                    )}
+                </nav>
+            </aside>
+        </>
+    );
+}
+
+function SidebarSection({
+    title,
+    action,
+    children,
+}: {
+    title: string;
+    action?: { to: string; label: string };
+    children: React.ReactNode;
+}) {
+    return (
+        <div className="mt-6">
+            <div className="px-4 mb-1.5 flex items-center justify-between">
+                <span className="text-[11px] uppercase tracking-wider text-[#85878a]">{title}</span>
+                {action && (
+                    <Link to={action.to} className="text-[11px] text-[#75a4f7] hover:underline">
+                        {action.label}
+                    </Link>
+                )}
+            </div>
+            <div className="space-y-0.5">{children}</div>
+        </div>
     );
 }
 

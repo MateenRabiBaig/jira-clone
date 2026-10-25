@@ -1,18 +1,11 @@
 import type { Task } from '../../types';
 import Avatar from '../common/Avatar';
+import { priorityBadgeStyles, statusBadgeStyles, statusLabels } from '../../utils/badges';
 
 interface Props {
   tasks: Task[];
   onTaskClick: (task: Task) => void;
 }
-
-const priorityBadgeStyles: Record<string, string> = {
-  high: 'bg-[#42221F] text-[#FD9891]',
-  medium: 'bg-[#3A2C1F] text-[#EED12B]',
-  low: 'bg-[#303134] text-[#A9ABAF]',
-};
-
-const statusLabels: Record<string, string> = { todo: 'To Do', 'in-progress': 'In Progress', done: 'Done' };
 
 export default function ListView({ tasks, onTaskClick }: Props) {
   return (
@@ -29,32 +22,36 @@ export default function ListView({ tasks, onTaskClick }: Props) {
           </tr>
         </thead>
         <tbody>
-          {tasks.map((t) => (
+          {tasks.map((task) => (
             <tr
-              key={t._id}
-              onClick={() => onTaskClick(t)}
+              key={task.id}
+              onClick={() => onTaskClick(task)}
               className="border-b border-jira-border last:border-0 hover:bg-jira-card cursor-pointer"
             >
-              <td className="px-4 py-2 text-jira-muted whitespace-nowrap">{t.ticketKey ?? '—'}</td>
-              <td className="px-4 py-2 text-jira-textBright">{t.title}</td>
-              <td className="px-4 py-2 text-jira-muted whitespace-nowrap">{statusLabels[t.status]}</td>
-              <td className="px-4 py-2">
-                <span className={`text-[10px] px-2 py-0.5 rounded-full capitalize ${priorityBadgeStyles[t.priority]}`}>
-                  {t.priority}
+              <td className="px-4 py-2 text-jira-muted whitespace-nowrap">{task.ticketKey ?? '—'}</td>
+              <td className="px-4 py-2 text-jira-textBright">{task.title}</td>
+              <td className="px-4 py-2 whitespace-nowrap">
+                <span className={`text-[10px] px-2 py-0.5 rounded-full whitespace-nowrap ${statusBadgeStyles[task.status]}`}>
+                  {statusLabels[task.status]}
                 </span>
               </td>
               <td className="px-4 py-2">
-                {t.assignee ? (
+                <span className={`text-[10px] px-2 py-0.5 rounded-full capitalize whitespace-nowrap ${priorityBadgeStyles[task.priority]}`}>
+                  {task.priority}
+                </span>
+              </td>
+              <td className="px-4 py-2">
+                {typeof task.assignee === 'object' && task.assignee ? (
                   <div className="flex items-center gap-2">
-                    <Avatar name={t.assignee.name} size={18} />
-                    <span className="text-jira-muted text-xs whitespace-nowrap">{t.assignee.name}</span>
+                    <Avatar name={task.assignee.name} src={task.assignee.avatarUrl} size={18} />
+                    <span className="text-jira-muted text-xs whitespace-nowrap">{task.assignee.name}</span>
                   </div>
                 ) : (
                   <span className="text-jira-muted text-xs">Unassigned</span>
                 )}
               </td>
               <td className="px-4 py-2 text-jira-muted text-xs whitespace-nowrap">
-                {t.dueDate ? new Date(t.dueDate).toLocaleDateString() : '—'}
+                {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : '—'}
               </td>
             </tr>
           ))}

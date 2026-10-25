@@ -32,7 +32,7 @@ function QuickActions() {
             {showNewProject && (
                 <CreateProjectModal
                     onClose={() => setShowNewProject(false)}
-                    onCreated={(project) => navigate(`/projects/${project._id}`)}
+                    onCreated={(project) => navigate(`/projects/${project.id}`)}
                 />
             )}
 

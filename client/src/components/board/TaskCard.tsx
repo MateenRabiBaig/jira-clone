@@ -3,6 +3,7 @@ import { CSS } from '@dnd-kit/utilities';
 import type { Task } from '../../types';
 import PriorityIcon from './PriorityIcon';
 import { Paperclip, Clock } from 'lucide-react';
+import Avatar from '../common/Avatar';
 
 interface Props {
   task: Task;
@@ -11,7 +12,7 @@ interface Props {
 
 export default function TaskCard({ task, onClick }: Props) {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
-    id: task._id,
+    id: task.id,
   });
 
   const style = {
@@ -48,10 +49,12 @@ export default function TaskCard({ task, onClick }: Props) {
         {/* Left side icons */}
         <div className="flex items-center gap-2 text-[#96999e]">
           {/* Attachments indicator */}
-          <div className="flex items-center gap-0.5">
-            <Paperclip size={11} />
-            {task.attachments && task.attachments.length > 0 && <span className="text-[11px]">{task.attachments.length}</span>}
-          </div>
+          {(task.attachments?.length ?? 0) > 0 && (
+            <div className="flex items-center gap-0.5">
+              <Paperclip size={11} />
+              <span className="text-[11px]">{task.attachments?.length}</span>
+            </div>
+          )}
 
           {/* Due date */}
           {task.dueDate && (
@@ -66,15 +69,10 @@ export default function TaskCard({ task, onClick }: Props) {
 
         {/* Right side - Assignee */}
         <div className="flex items-center gap-0.5">
-          {task.assignee ? (
-            <div
-              className="w-5 h-5 rounded-full bg-[#5a50b5] text-white text-[10px] flex items-center justify-center font-medium"
-              title={task.assignee.name}
-            >
-              {task.assignee.name.charAt(0).toUpperCase()}
-            </div>
+          {typeof task.assignee === 'object' && task.assignee ? (
+            <Avatar name={task.assignee.name} src={task.assignee.avatarUrl} size={20} />
           ) : (
-            <div className="w-5 h-5 rounded-full border border-dashed border-[#626469]"></div>
+            <div className="w-5 h-5 rounded-full border border-dashed border-[#626469]" aria-label="Unassigned"></div>
           )}
         </div>
       </div>

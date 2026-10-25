@@ -2,7 +2,7 @@ import { useDroppable } from '@dnd-kit/core';
 import type { Task, TaskStatus } from '../../types';
 import TaskCard from './TaskCard';
 import { statusLabels } from '../../utils/badges';
-import { MoreHorizontal, Plus } from 'lucide-react';
+import { Plus } from 'lucide-react';
 
 interface Props {
   status: TaskStatus;
@@ -26,11 +26,6 @@ export default function Column({ status, tasks, onTaskClick, onCreateTask }: Pro
             {tasks.length}
           </span>
         </div>
-        <div className="flex items-center gap-0.5">
-          <button className="p-0.5 hover:bg-[#252629] rounded text-[#96999e]">
-            <MoreHorizontal size={14} />
-          </button>
-        </div>
       </div>
 
       {/* Column Body */}
@@ -42,7 +37,7 @@ export default function Column({ status, tasks, onTaskClick, onCreateTask }: Pro
       >
         <div className="space-y-1.5">
           {tasks.map((task) => (
-            <TaskCard key={task._id} task={task} onClick={() => onTaskClick(task)} />
+            <TaskCard key={task.id} task={task} onClick={() => onTaskClick(task)} />
           ))}
         </div>
 
